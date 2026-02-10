@@ -1,0 +1,27 @@
+
+requests
+praw
+beautifulsoup4
+moviepy
+gTTS
+textblob
+openai
+google-generativeai
+edge-tts
+google-api-python-client
+oauth2client
+boto3
+instabot
+tiktok-api
+schedule
+selenium
+webdriver-manager
+imageio==2.33.1
+imageio-ffmpeg>=0.4.9
+decorator>=4.3.0
+tqdm>=4.11.2
+numpy>=1.15.0
+proglog<=0.1.9 
+msgpack>=1.0.0
+# Add comments for optional complex dependencies
+# ffmpeg-python
