@@ -12,21 +12,25 @@ class RedditScraper:
 
     def get_top_post(self, subreddit_name="AskReddit", time_filter="day"):
         """Fetches the top post from a subreddit."""
+        posts = self.get_top_posts(subreddit_name, time_filter, limit=1)
+        return posts[0] if posts else None
+
+    def get_top_posts(self, subreddit_name="AskReddit", time_filter="day", limit=5):
+        """Fetches multiple top posts from a subreddit."""
         try:
             subreddit = self.reddit.subreddit(subreddit_name)
-            top_post = list(subreddit.top(time_filter=time_filter, limit=1))[0]
-            
-            # Simple content extraction (title + body)
-            content = f"Date: {top_post.created_utc}\nTitle: {top_post.title}\n\n{top_post.selftext}"
-            
-            return {
-                "source": "Reddit",
-                "subreddit": subreddit_name,
-                "title": top_post.title,
-                "author": str(top_post.author),
-                "url": top_post.url,
-                "content": content
-            }
+            posts = []
+            for top_post in subreddit.top(time_filter=time_filter, limit=limit):
+                content = f"Date: {top_post.created_utc}\nTitle: {top_post.title}\n\n{top_post.selftext}"
+                posts.append({
+                    "source": "Reddit",
+                    "subreddit": subreddit_name,
+                    "title": top_post.title,
+                    "author": str(top_post.author),
+                    "url": top_post.url,
+                    "content": content
+                })
+            return posts
         except Exception as e:
             print(f"Error scraping Reddit: {e}")
-            return None
+            return []

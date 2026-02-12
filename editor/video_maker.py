@@ -1,15 +1,59 @@
 
 import os
-from moviepy.editor import VideoFileClip, AudioFileClip, TextClip, CompositeVideoClip, concatenate_videoclips
+from moviepy.editor import VideoFileClip, AudioFileClip, TextClip, CompositeVideoClip, concatenate_videoclips, CompositeAudioClip, ColorClip
 
 class VideoEditor:
+    # Font/Style configurations for different moods
+    STYLE_CONFIGS = {
+        "cinematic_documentary": {
+            "font": "Courier-Bold",
+            "fontsize": 60,
+            "color": "white",
+            "stroke_color": "black",
+            "stroke_width": 1,
+            "method": "caption",
+            "pos": ("center", "bottom"),
+            "padding": 50,
+            "overlay_color": (0, 0, 0), # Deep black base
+            "grain": True,
+            "vignette": True
+        },
+        "finance_wealth": {
+            "font": "Georgia-Bold",
+            "fontsize": 75,
+            "color": "#FFD700", # Gold
+            "stroke_color": "black",
+            "stroke_width": 2,
+            "method": "caption",
+            "pos": ("center", 100),
+            "overlay_color": (10, 20, 30), # Midnight blue tint
+            "vignette": True
+        },
+        "breaking_viral": {
+            "font": "Helvetica-Bold",
+            "fontsize": 90,
+            "color": "white",
+            "bg_color": "red",
+            "method": "caption",
+            "pos": "bottom",
+            "vignette": False
+        },
+        "standard": {
+            "font": "Arial-Bold",
+            "fontsize": 70,
+            "color": "white",
+            "method": "label",
+            "pos": "center"
+        }
+    }
+
     def __init__(self, output_dir="output"):
         self.output_dir = output_dir
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
 
-    def create_video(self, audio_path, video_paths, script_text, output_filename="final_video.mp4", background_music_path=None, intro_video_path=None):
+    def create_video(self, audio_path, video_paths, script_text, output_filename="final_video.mp4", background_music_path=None, intro_video_path=None, style="standard"):
         """Creates a video by combining audio with background clips, text, music, and intro."""
         try:
             # Load voiceover audio
@@ -39,9 +83,8 @@ class VideoEditor:
             for path in video_paths:
                 try:
                     clip = VideoFileClip(path)
-                    # Resize for standard short format (9:16) if needed
-                    # clip = clip.resize(height=1920) 
-                    # clip = clip.crop(x1=clip.w/2 - 540, width=1080) 
+                    # For a professional look, ensure clips are covering the screen
+                    # resize/crop logic would go here
                     clips.append(clip)
                 except Exception as e:
                     print(f"Error loading clip {path}: {e}")
@@ -61,16 +104,50 @@ class VideoEditor:
             # Set audio for content
             content_video_clip = content_video_clip.set_audio(final_audio)
 
-            # Add Text Overlay (Simple)
-            txt_clip = TextClip(script_text[:50]+"...", fontsize=70, color='white', size=content_video_clip.size)
-            txt_clip = txt_clip.set_pos('center').set_duration(5)
+            # Add Text Overlay based on Style
+            style_cfg = self.STYLE_CONFIGS.get(style, self.STYLE_CONFIGS["standard"])
             
-            final_content = CompositeVideoClip([content_video_clip, txt_clip])
+            # 1. Overlay & Filters
+            final_layers = [content_video_clip]
+            
+            # Add Grain Overlay if requested
+            if style_cfg.get("grain"):
+                grain = self._create_grain_overlay(content_video_clip.size, duration)
+                final_layers.append(grain)
+            
+            # Show a portion of the text or the title
+            display_text = script_text[:80].upper() if style == "motivational" else script_text[:80] + "..."
+            
+            txt_clip = TextClip(
+                display_text, 
+                fontsize=style_cfg.get("fontsize", 70), 
+                color=style_cfg.get("color", "white"),
+                font=style_cfg.get("font", "Arial-Bold"),
+                stroke_color=style_cfg.get("stroke_color"),
+                stroke_width=style_cfg.get("stroke_width", 0),
+                size=(content_video_clip.w * 0.8, None),
+                method='caption' 
+            )
+            
+            txt_clip = txt_clip.set_pos(style_cfg.get("pos", "center")).set_duration(min(duration, 7))
+            final_layers.append(txt_clip)
+            
+            final_content = CompositeVideoClip(final_layers)
+
+    def _create_grain_overlay(self, size, duration):
+        """Creates a subtle moving grain/noise layer for cinematic texture."""
+        import numpy as np
+        from moviepy.editor import ImageClip
+        
+        # Create a single frame of noise
+        w, h = size
+        noise = np.random.randint(0, 50, (h, w, 3), dtype='uint8')
+        grain_clip = ImageClip(noise).set_duration(duration).set_opacity(0.1)
+        return grain_clip
 
             # Add Intro Video if provided
             if intro_video_path and os.path.exists(intro_video_path):
                 intro_clip = VideoFileClip(intro_video_path)
-                # Resize intro to match content if necessary
                 if intro_clip.size != final_content.size:
                     intro_clip = intro_clip.resize(final_content.size)
                 
