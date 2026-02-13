@@ -29,6 +29,8 @@ RUN mkdir -p assets output scripts
 # Set environment variables (Placeholders - should be set in Cloud Provider)
 ENV PYTHONUNBUFFERED=1
 
-# The command to run when the container starts
-# Default to showing help, but can be overridden by Cloud provider commands
-CMD ["python", "main.py", "--help"]
+# Expose the port the app runs on
+EXPOSE 8000
+
+# Start the API server
+CMD ["python", "api.py"]

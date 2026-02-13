@@ -238,6 +238,8 @@ async def draft_community(request: dict):
 async def get_news_trending():
     "Returns AI-curated news opportunities from the World Pulse engine."
     return bot.get_trending_opportunities()
+@app.get("/api/video/download/{filename}")
+async def download_video(filename: str):
     file_path = os.path.join(bot.config.OUTPUT_DIR, filename)
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Video not found")
@@ -245,4 +247,5 @@ async def get_news_trending():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
