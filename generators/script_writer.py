@@ -8,25 +8,41 @@ class ScriptWriter:
         self.model = model
         self.styles = config_styles or {}
 
-    def generate_script(self, topic, style="cinematic_documentary"):
+    def generate_script(self, topic, style="cinematic_documentary", structure="cinematic"):
         """Generates a high-stakes script using Viral Psychology & Retention Hooks."""
         if not self.api_key:
             return f"The mystery of {topic} remains unsolved. A journey into the depths of values that matters."
 
-        prompt = f"""
-        Write a high-retention, cinematic documentary script for the topic: {topic}.
-        
-        Rules:
-        1. CURIOSITY HOOK: Start with a high-stakes question or a 'Super Hook' that establishes legitimacy immediately.
-        2. NON-OBVIOUS TAKE: Avoid the standard narrative; provide a fresh, counter-intuitive perspective.
-        3. OPEN LOOPS: Raise multiple information gaps in the beginning. Close some, but keep new ones opening to maintain retention.
-        4. LEVERAGE RESEARCH: Cite 'confidential reports', 'historical data', or 'newly uncovered evidence' for credibility.
-        5. DOPAMINE PACING: Use short, punchy sentences.
-        6. LIP-SYNC OPTIMIZED: Use clear, emotional language suitable for AI dubbing.
-        
-        Style: {style}
-        Return ONLY the script content.
-        """
+        if structure == "value_driven":
+            prompt = f"""
+            Write a high-retention, educational video script for the topic: {topic}.
+
+            Follow this EXACT Scaffold:
+            1. THE HOOK (0-15s): Stop the scroll. Promise exactly what the viewer will gain. e.g. "By the end of this video, you will..."
+            2. THE TRANSITION: Briefly explain why you are the authority or why this information is critical right now.
+            3. THE MEAT: Deliver the value using the 'Rule of Three' (Three distinct, actionable points).
+            4. THE CTA: Do NOT just say subscribe. Contextual Recommendation: "If you want to achieve [Goal related to topic], watch this next video on [Related Topic]."
+
+            Style: {style}
+            Tone: Authoritative, clear, consistent.
+            Format: Include [Visual] descriptions for b-roll.
+            Return ONLY the script content.
+            """
+        else:
+            prompt = f"""
+            Write a high-retention, cinematic documentary script for the topic: {topic}.
+            
+            Rules:
+            1. CURIOSITY HOOK: Start with a high-stakes question or a 'Super Hook' that establishes legitimacy immediately.
+            2. NON-OBVIOUS TAKE: Avoid the standard narrative; provide a fresh, counter-intuitive perspective.
+            3. OPEN LOOPS: Raise multiple information gaps in the beginning. Close some, but keep new ones opening to maintain retention.
+            4. LEVERAGE RESEARCH: Cite 'confidential reports', 'historical data', or 'newly uncovered evidence' for credibility.
+            5. DOPAMINE PACING: Use short, punchy sentences.
+            6. LIP-SYNC OPTIMIZED: Use clear, emotional language suitable for AI dubbing.
+            
+            Style: {style}
+            Return ONLY the script content.
+            """
 
         try:
             response = requests.post(

@@ -105,18 +105,7 @@ class MediaFetcher:
         combined = local_assets + pexels_videos
         return combined[:per_page]
             
-            # Extract video files (choose highest res available)
-            video_files = []
-            for video in videos:
-                files = video.get("video_files", [])
-                best_quality = sorted(files, key=lambda x: x['width'] * x['height'], reverse=True)[0]
-                video_files.append(best_quality['link'])
-            
-            return video_files
 
-        except Exception as e:
-            print(f"Error fetching media: {e}")
-            return []
 
     def download_video(self, url, output_path):
         """Downloads a video file."""

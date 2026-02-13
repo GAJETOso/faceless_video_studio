@@ -337,7 +337,8 @@ class FacelessVideoBot:
             print(f"\n[Video {i+1}/{count}] Topic Discovered: {post['title']}")
             
             # Step A: Generate Script
-            script = self.script_engine.generate_script(topic=post['title'], style=config["style"])
+            structure = niche_config.get("structure", "cinematic")
+            script = self.script_engine.generate_script(topic=post['title'], style=niche_config["style"], structure=structure)
             
             # Step B: Interactive Review (The "Modify at any point" option)
             if interactive:
@@ -367,8 +368,8 @@ class FacelessVideoBot:
                 script_content=script,
                 content_source_name="NicheDiscovery",
                 output_prefix=f"niche_{niche}_{i}",
-                style=config["style"],
-                voice=config["voice"]
+                style=niche_config["style"],
+                voice=niche_config["voice"]
             )
 
     def run_reddit_pipeline(self, subreddit="AskReddit", count=1, style="standard"):

@@ -34,8 +34,8 @@ class Config:
                 "echo": {"engine": "openai", "desc": "Viral/Energetic"}
             },
             "NICHES": {
-                "mystery": {"subreddits": ["UnresolvedMysteries"], "style": "cinematic_documentary", "voice": "onyx"},
-                "finance": {"subreddits": ["finance", "WallStreetBets"], "style": "finance_wealth", "voice": "alloy"}
+                "mystery": {"subreddits": ["UnresolvedMysteries"], "style": "cinematic_documentary", "voice": "onyx", "structure": "cinematic"},
+                "finance": {"subreddits": ["finance", "WallStreetBets"], "style": "finance_wealth", "voice": "alloy", "structure": "value_driven"}
             }
         }
         self.load()
