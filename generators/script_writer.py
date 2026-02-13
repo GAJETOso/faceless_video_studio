@@ -61,6 +61,9 @@ class ScriptWriter:
             )
             response.raise_for_status()
             return response.json()['choices'][0]['message']['content']
+        except Exception as e:
+            print(f"Enhancement failed: {e}")
+            return script
     def analyze_tone(self, script):
         """Analyzes script tone and recommends the best voice."""
         if not self.api_key:
