@@ -235,6 +235,7 @@ document.getElementById('start-production-btn').addEventListener('click', () => 
 // Production API
 const production = {
     initialize: () => {
+        logToTerminal("[SYSTEM] Analyzing production parameters...");
         if (state.activeMode === 'long') production.long();
         else production.custom();
     },
@@ -500,8 +501,8 @@ const production = {
         const gPublish = document.getElementById('toggle-publish').checked;
         const gLipsync = document.getElementById('toggle-lipsync').checked;
 
-        if (!title || !script) {
-            alert("Please provide both a title and a script.");
+        if (!title) {
+            alert("Please provide at least a title.");
             return;
         }
 

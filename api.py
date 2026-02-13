@@ -22,9 +22,10 @@ class VideoRequest(BaseModel):
 
 class ScriptRequest(BaseModel):
     title: str
-    script: str
+    script: Optional[str] = ""
     style: str
     voice: str
+    structure: Optional[str] = "cinematic"
     generate_thumb: Optional[bool] = True
     enhance_script: Optional[bool] = False
     publish: Optional[bool] = False
@@ -71,10 +72,15 @@ async def produce_niche(request: VideoRequest, background_tasks: BackgroundTasks
 @app.post("/api/produce/custom")
 async def produce_custom(request: ScriptRequest, background_tasks: BackgroundTasks):
     """Triggers production with a custom script."""
+    # If script is empty, generate it using the selected structure
+    script_content = request.script
+    if not script_content:
+        script_content = bot.script_engine.generate_script(topic=request.title, style=request.style, structure=request.structure)
+    
     background_tasks.add_task(
         bot.produce_video, 
         title=request.title, 
-        script_content=request.script, 
+        script_content=script_content, 
         style=request.style, 
         voice=request.voice,
         generate_thumb=request.generate_thumb,
@@ -86,10 +92,15 @@ async def produce_custom(request: ScriptRequest, background_tasks: BackgroundTas
 @app.post("/api/produce/long")
 async def produce_long(request: ScriptRequest, background_tasks: BackgroundTasks):
     """Triggers long-form chapter-based documentary production."""
+    # If script is empty, generate it using the selected structure
+    script_content = request.script
+    if not script_content:
+        script_content = bot.script_engine.generate_script(topic=request.title, style=request.style, structure=request.structure)
+
     background_tasks.add_task(
         bot.produce_long_form, 
         title=request.title, 
-        full_script=request.script, 
+        full_script=script_content, 
         style=request.style, 
         voice=request.voice,
         generate_thumb=request.generate_thumb,
