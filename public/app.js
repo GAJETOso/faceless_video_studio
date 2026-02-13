@@ -244,6 +244,7 @@ const production = {
         const script = document.getElementById('custom-script').value;
         const style = document.getElementById('custom-style').value;
         const voice = document.getElementById('custom-voice').value;
+        const structure = document.getElementById('custom-structure').value;
 
         if (!title || !script) return showNotification("Title & Script required");
 
@@ -252,7 +253,7 @@ const production = {
             const res = await fetch('/api/produce/intl', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, script, style, voice })
+                body: JSON.stringify({ title, script, style, voice, structure })
             });
             showNotification("Global Broadcast Sequence Started");
         } catch (err) { logToTerminal(`[ERROR] Global broadcast failed.`); }
@@ -492,8 +493,10 @@ const production = {
         const script = document.getElementById('custom-script').value;
         const style = document.getElementById('custom-style').value;
         const voice = document.getElementById('custom-voice').value;
+        const structure = document.getElementById('custom-structure').value;
 
         const gThumb = document.getElementById('toggle-thumb').checked;
+        const gEnhance = document.getElementById('toggle-enhance').checked;
         const gPublish = document.getElementById('toggle-publish').checked;
         const gLipsync = document.getElementById('toggle-lipsync').checked;
 
@@ -508,7 +511,7 @@ const production = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    title, script, style, voice,
+                    title, script, style, voice, structure,
                     generate_thumb: gThumb,
                     enhance_script: gEnhance,
                     publish: gPublish,
@@ -532,6 +535,7 @@ const production = {
         const script = document.getElementById('custom-script').value;
         const style = document.getElementById('custom-style').value;
         const voice = document.getElementById('custom-voice').value;
+        const structure = document.getElementById('custom-structure').value;
 
         const gThumb = document.getElementById('toggle-thumb').checked;
         const gEnhance = document.getElementById('toggle-enhance').checked;
@@ -545,7 +549,7 @@ const production = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    title, script, style, voice,
+                    title, script, style, voice, structure,
                     generate_thumb: gThumb,
                     enhance_script: gEnhance,
                     publish: gPublish
