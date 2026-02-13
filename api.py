@@ -2,7 +2,7 @@
 import os
 from fastapi import FastAPI, BackgroundTasks, HTTPException
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from pydantic import BaseModel
 from typing import List, Optional
 from main import FacelessVideoBot
@@ -31,7 +31,7 @@ class ScriptRequest(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "Matters of Value API is running"}
+    return RedirectResponse(url="/dashboard")
 
 @app.get("/api/settings")
 async def get_settings():
