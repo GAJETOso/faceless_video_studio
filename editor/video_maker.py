@@ -111,6 +111,20 @@ class VideoEditor:
             print(f"Error merging: {e}")
             return None
 
+    def _create_watermark(self, size, handle, duration):
+        from moviepy.editor import TextClip
+        w, h = size
+        watermark = TextClip(
+            handle,
+            fontsize=30,
+            color='white',
+            font='Arial-Bold',
+            stroke_color='black',
+            stroke_width=1,
+            method='label'
+        ).set_opacity(0.4).set_duration(duration).set_position((w-250, h-50))
+        return watermark
+
     def _create_grain_overlay(self, size, duration):
         import numpy as np
         from moviepy.editor import ImageClip

@@ -19,6 +19,12 @@ from generators.intro_generator import IntroHookGenerator
 from generators.series_planner import SeriesPlanner
 from generators.voice_cloning import VoiceCloningEngine
 from publishers.publishing_pipeline import PublishingPipeline
+from generators.branding_engine import BrandingEngine
+from generators.music_selector import MusicSelector
+from generators.content_calendar import ContentCalendar
+from generators.thumbnail_generator import ThumbnailGenerator
+from generators.sponsor_manager import SponsorManager
+from publishers.publishing_hub import PublishingHub
 
 class FacelessVideoBot:
     def __init__(self):
@@ -46,7 +52,7 @@ class FacelessVideoBot:
         
         # Monetization, Distribution, & Personalization
         self.sponsor_engine = SponsorManager(api_key=self.config.OPENAI_API_KEY)
-        self.repurpose_engine = RepurposingEngine(api_key=self.config.OPENAI_API_KEY)
+        self.repurpose_engine = None # RepurposingEngine missing
         self.voice_cloning_engine = VoiceCloningEngine(api_key=self.config.OPENAI_API_KEY)
         self.publishing_pipeline = PublishingPipeline(config=self.config)
         
@@ -79,6 +85,8 @@ class FacelessVideoBot:
     def analyze_for_repurposing(self, script):
         """Identifies viral segments for Shorts/Reels."""
         print("[DISTRIBUTION] Scanning script for viral micro-moments...")
+        if not self.repurpose_engine:
+            return []
         return self.repurpose_engine.identify_viral_shorts(script)
 
     def orchestrate_publishing(self, video_path, platforms, metadata):
