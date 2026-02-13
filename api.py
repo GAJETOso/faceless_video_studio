@@ -7,11 +7,13 @@ from pydantic import BaseModel
 from typing import List, Optional
 from main import FacelessVideoBot
 
-app = FastAPI(title="Values That Matters Studio API")
+app = FastAPI(title="Matters of Value Studio API")
 bot = FacelessVideoBot()
 
 # Serve static files for the dashboard
 app.mount("/dashboard", StaticFiles(directory="public", html=True), name="static")
+# Serve video outputs for the Cinema Feed
+app.mount("/exports", StaticFiles(directory="output"), name="exports")
 
 class VideoRequest(BaseModel):
     niche: str
@@ -23,10 +25,24 @@ class ScriptRequest(BaseModel):
     script: str
     style: str
     voice: str
+    generate_thumb: Optional[bool] = True
+    enhance_script: Optional[bool] = False
+    publish: Optional[bool] = False
 
 @app.get("/")
 async def root():
-    return {"message": "Values That Matters API is running"}
+    return {"message": "Matters of Value API is running"}
+
+@app.get("/api/settings")
+async def get_settings():
+    return bot.config.defaults # Returns all keys with current values
+
+@app.post("/api/settings")
+async def update_settings(settings: dict):
+    bot.config.update(settings)
+    # Re-initialize bot modules with new keys
+    bot.__init__() 
+    return {"status": "Settings updated and engine re-initialized"}
 
 @app.get("/api/videos")
 async def list_videos():
@@ -60,12 +76,168 @@ async def produce_custom(request: ScriptRequest, background_tasks: BackgroundTas
         title=request.title, 
         script_content=request.script, 
         style=request.style, 
-        voice=request.voice
+        voice=request.voice,
+        generate_thumb=request.generate_thumb,
+        enhance_script=request.enhance_script,
+        publish=request.publish
     )
     return {"status": "Custom production started"}
 
-@app.get("/api/video/download/{filename}")
-async def download_video(filename: str):
+@app.post("/api/produce/long")
+async def produce_long(request: ScriptRequest, background_tasks: BackgroundTasks):
+    """Triggers long-form chapter-based documentary production."""
+    background_tasks.add_task(
+        bot.produce_long_form, 
+        title=request.title, 
+        full_script=request.script, 
+        style=request.style, 
+        voice=request.voice,
+        generate_thumb=request.generate_thumb,
+        enhance_script=request.enhance_script,
+        publish=request.publish
+    )
+@app.get("/api/calendar/current")
+async def get_calendar():
+    "Returns the current AI-generated content plan."
+    plan = bot.calendar.get_current_plan()
+    return plan or {"message": "No active plan found"}
+
+@app.post("/api/calendar/generate")
+async def generate_calendar():
+    "Triggers the AI to generate a new 7-day content schedule."
+    plan = bot.calendar.generate_weekly_plan()
+    return {"status": "Weekly plan generated", "plan": plan}
+
+@app.post("/api/produce/intl")
+async def produce_intl(request: ScriptRequest, background_tasks: BackgroundTasks):
+    "Generates international dubbed versions of the video."
+    background_tasks.add_task(bot.produce_dubbed_variants, title=request.title, script_content=request.script)
+    return {"status": "International dubbing sequence initiated (5+ languages)"}
+
+@app.post("/api/produce/test")
+async def produce_test(request: ScriptRequest, background_tasks: BackgroundTasks):
+    "Tests every possible demographic angle/hook for a topic."
+    background_tasks.add_task(bot.run_angle_test, topic=request.title)
+    return {"status": "Angle-Testing & Demographic Optimization initiated"}
+
+from publishers.analytics_aggregator import AnalyticsAggregator
+aggregator = AnalyticsAggregator()
+
+@app.get("/api/analytics/health")
+async def get_analytics_health():
+    "Returns aggregated cross-platform studio health metrics."
+    return aggregator.get_studio_health()
+
+@app.get("/api/analytics/pivot")
+async def get_strategic_pivot():
+    "Recommends a niche shift based on viral coefficients and world trends."
+    health = aggregator.get_studio_health()
+    return bot.get_strategic_pivot(health)
+
+@app.post("/api/produce/intro-hook")
+async def generate_intro_hook(request: dict):
+    "Designs a high-impact CGI-style intro hook for a topic."
+    topic = request.get("topic")
+    design = bot.intro_engine.generate_cgi_hook(topic)
+    return {"design": design}
+
+@app.post("/api/analytics/simulate-video-launch")
+async def simulate_video_launch(request: dict):
+    "Simulates the launch of a video and updates studio metrics."
+    # Mock stats for a new "viral" video
+    platform = request.get("platform", "tiktok")
+    views = request.get("views", 5000)
+    shares = request.get("shares", 200)
+    likes = request.get("likes", 1500)
+    comments = request.get("comments", 300)
+    
+    video_stats = {
+        "platform": platform,
+        "views": views,
+        "shares": shares,
+        "likes": likes,
+        "comments": comments
+    }
+    
+    # Update global health
+    new_health = aggregator.update_metrics(video_stats)
+    
+    # Calculate specific K-score for this video
+    k_score = aggregator.calculate_viral_coefficient(video_stats)
+    
+    return {
+        "status": "Video Launch Simulated",
+        "video_k_score": k_score,
+        "new_studio_health": new_health
+    }
+
+@app.post("/api/produce/series-plan")
+async def plan_series(request: dict):
+    "Generates a 3-Part Documentary Trilogy plan."
+    topic = request.get("topic")
+    plan = bot.generate_series_plan(topic)
+    return {"plan": plan}
+
+@app.post("/api/produce/thumbnail-ab")
+async def test_thumbnail_ab(request: dict):
+    "Generates two distinct thumbnail concepts for A/B testing."
+    topic = request.get("topic")
+    concepts = bot.get_thumbnail_ab(topic)
+    return {"concepts": concepts}
+
+@app.post("/api/monetization/sponsors")
+async def analyze_sponsors(request: dict):
+    "Analyzes the script for optimal sponsor integration spots."
+    script = request.get("script")
+    spots = bot.analyze_for_sponsors(script)
+    return {"spots": spots}
+
+@app.post("/api/distribution/repurpose")
+async def repurpose_content(request: dict):
+    "Identifies viral segments for Shorts/Reels repurposing."
+    script = request.get("script")
+    shorts = bot.analyze_for_repurposing(script)
+    return {"shorts": shorts}
+
+@app.post("/api/personalization/clone-voice")
+async def clone_voice(request: dict):
+    "Clones a voice or lists available cloned voices."
+    action = request.get("action")
+    name = request.get("name")
+    sample_path = request.get("sample_path")
+    result = bot.manage_voice_cloning(action, name, sample_path)
+    return result
+
+@app.post("/api/distribution/publish")
+async def publish_video(request: dict):
+    "Publishes a video to selected platforms."
+    video_path = request.get("video_path")
+    platforms = request.get("platforms", ["youtube", "tiktok"])
+    metadata = request.get("metadata", {"title": "New Video"})
+    result = bot.orchestrate_publishing(video_path, platforms, metadata)
+    return result
+
+@app.post("/api/engage/comment")
+async def engage_comment(request: dict):
+    "Generates a strategic AI response to a viewer comment."
+    topic = request.get("topic")
+    script = request.get("script")
+    comment = request.get("comment")
+    response = bot.auto_respond_to_viewer(topic, script, comment)
+    return {"reply": response}
+
+@app.post("/api/community/draft")
+async def draft_community(request: dict):
+    "Generates a viral engagement kit for social community tabs."
+    topic = request.get("topic")
+    script = request.get("script")
+    kit = bot.generate_community_kit(topic, script)
+    return {"kit": kit}
+
+@app.get("/api/news/trending")
+async def get_news_trending():
+    "Returns AI-curated news opportunities from the World Pulse engine."
+    return bot.get_trending_opportunities()
     file_path = os.path.join(bot.config.OUTPUT_DIR, filename)
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Video not found")

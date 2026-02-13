@@ -7,6 +7,19 @@ from generators.voice_generator import VoiceGenerator
 from generators.media_fetcher import MediaFetcher
 from editor.video_maker import VideoEditor
 
+from generators.news_integrator import NewsIntegrator
+from generators.translation_engine import TranslationEngine
+from generators.hook_optimizer import HookOptimizer
+from publishers.sentiment_tracker import SentimentTracker
+from generators.lipsync_engine import LipSyncEngine
+from publishers.comment_responder import CommentResponder
+from publishers.community_manager import CommunityManager
+from publishers.pivot_analyzer import PivotAnalyzer
+from generators.intro_generator import IntroHookGenerator
+from generators.series_planner import SeriesPlanner
+from generators.voice_cloning import VoiceCloningEngine
+from publishers.publishing_pipeline import PublishingPipeline
+
 class FacelessVideoBot:
     def __init__(self):
         self.config = settings.Config()
@@ -16,79 +29,272 @@ class FacelessVideoBot:
                                    client_secret=self.config.REDDIT_CLIENT_SECRET,
                                    user_agent=self.config.REDDIT_USER_AGENT)
         
-        self.script_engine = ScriptWriter(api_key=self.config.OPENAI_API_KEY)
-        self.voice_engine = VoiceGenerator(api_key=self.config.OPENAI_API_KEY, lang="en")
-        self.media_engine = MediaFetcher(pexels_api_key=self.config.PEXELS_API_KEY)
-        self.editor = VideoEditor(output_dir=self.config.OUTPUT_DIR)
-
-
-    def produce_video(self, title, script_content, content_source_name="generic", output_prefix="video", style="standard", voice="alloy", sign_off=True):
-        """Shared pipeline to generate, edit, and publish a video with a specific style."""
-        print(f"Producing video for: {title} (Style: {style}, Voice: {voice})")
+        self.script_engine = ScriptWriter(api_key=self.config.OPENAI_API_KEY, config_styles=self.config.STYLES)
+        self.branding_engine = BrandingEngine(api_key=self.config.OPENAI_API_KEY)
+        self.translation_engine = TranslationEngine(api_key=self.config.OPENAI_API_KEY)
+        self.hook_engine = HookOptimizer(api_key=self.config.OPENAI_API_KEY)
+        self.sentiment_engine = SentimentTracker(api_key=self.config.OPENAI_API_KEY)
+        self.news_engine = NewsIntegrator(api_key=self.config.OPENAI_API_KEY)
+        self.community_engine = CommunityManager(api_key=self.config.OPENAI_API_KEY)
         
+        # Strategic Intelligence & Visual Hooks
+        self.pivot_engine = PivotAnalyzer(api_key=self.config.OPENAI_API_KEY)
+        self.intro_engine = IntroHookGenerator(api_key=self.config.OPENAI_API_KEY)
+        self.series_engine = SeriesPlanner(api_key=self.config.OPENAI_API_KEY)
+        self.sync_engine = LipSyncEngine(api_key=self.config.OPENAI_API_KEY)
+        self.comment_bot = CommentResponder(api_key=self.config.OPENAI_API_KEY)
+        
+        # Monetization, Distribution, & Personalization
+        self.sponsor_engine = SponsorManager(api_key=self.config.OPENAI_API_KEY)
+        self.repurpose_engine = RepurposingEngine(api_key=self.config.OPENAI_API_KEY)
+        self.voice_cloning_engine = VoiceCloningEngine(api_key=self.config.OPENAI_API_KEY)
+        self.publishing_pipeline = PublishingPipeline(config=self.config)
+        
+        self.voice_engine = VoiceGenerator(api_key=self.config.OPENAI_API_KEY, config_voices=self.config.VOICES)
+        self.music_engine = MusicSelector(assets_dir=self.config.ASSETS_DIR)
+        self.media_engine = MediaFetcher(
+            pexels_api_key=self.config.PEXELS_API_KEY, 
+            openai_api_key=self.config.OPENAI_API_KEY,
+            config_styles=self.config.STYLES
+        )
+        self.editor = VideoEditor(output_dir=self.config.OUTPUT_DIR, config_styles=self.config.STYLES)
+        self.calendar = ContentCalendar(api_key=self.config.OPENAI_API_KEY, config=self.config)
+        self.thumbnailer = ThumbnailGenerator(self.config)
+        self.publisher = PublishingHub(output_dir=self.config.OUTPUT_DIR, api_key=self.config.OPENAI_API_KEY)
+
+    def generate_series_plan(self, topic):
+        """Generates a 3-part documentary arc."""
+        print(f"[SERIES] Planning trilogy for: {topic}")
+        return self.series_engine.plan_trilogy(topic)
+
+    def get_thumbnail_ab(self, topic):
+        """Generates A/B thumbnail concepts."""
+        return self.thumbnailer.generate_ab_concepts(topic)
+
+    def analyze_for_sponsors(self, script):
+        """Finds safe spots for ad integration."""
+        print("[MONETIZATION] Analyzing script for brand-safe ad slots...")
+        return self.sponsor_engine.find_safe_spots(script)
+
+    def analyze_for_repurposing(self, script):
+        """Identifies viral segments for Shorts/Reels."""
+        print("[DISTRIBUTION] Scanning script for viral micro-moments...")
+        return self.repurpose_engine.identify_viral_shorts(script)
+
+    def orchestrate_publishing(self, video_path, platforms, metadata):
+        """Orchestrates multi-platform publishing."""
+        return self.publishing_pipeline.publish_video(video_path, platforms, metadata)
+
+    def manage_voice_cloning(self, action, name=None, sample_path=None):
+        """Manages voice cloning operations."""
+        if action == "clone":
+            return self.voice_cloning_engine.clone_voice(name, sample_path)
+        elif action == "list":
+            return self.voice_cloning_engine.list_cloned_voices()
+        return {}
+
+    def get_strategic_pivot(self, current_stats):
+        """Recommends a high-growth niche shift using AI analysis."""
+        trending = self.news_engine.fetch_trending_topics()
+        print("[STRATEGY] Calculating optimal niche pivot...")
+        return self.pivot_engine.analyze_pivot_opportunity(current_stats, trending)
+
+    def generate_community_kit(self, topic, script):
+        """Generates a viral engagement kit for community tabs."""
+        print(f"[COMMUNITY] Drafting social engagement kit for: {topic}")
+        return self.community_engine.draft_community_package(topic, script)
+
+    def auto_respond_to_viewer(self, topic, script, comment):
+        """Strategic automated response to maximize viral engagement."""
+        print(f"[ENGAGEMENT] Drafting strategic reply for topic: {topic}")
+        return self.comment_bot.draft_response(topic, script, comment)
+
+    def get_trending_opportunities(self):
+        """Returns the latest high-stakes topics from the news engine."""
+        return self.news_engine.fetch_trending_topics()
+
+    def produce_dubbed_variants(self, title, script_content, languages=["Spanish", "French"]):
+        """Generates international versions of a video automatically."""
+        print(f"--- GLOBAL DUBBING INITIATED: {title} ---")
+        for lang in languages:
+            print(f"Translating and voicing for {lang}...")
+            translated_script = self.translation_engine.translate_script(script_content, lang)
+            self.produce_video(
+                title=f"{title} ({lang})",
+                script_content=translated_script,
+                output_prefix=f"intl_{lang.lower()}_{title[:10].replace(' ', '_')}",
+                voice="auto", # AI will pick best multi-lang voice if configured
+                publish=True
+            )
+
+    def run_angle_test(self, topic):
+        """Dupes and tests every possible angle/hook for a specific topic."""
+        print(f"--- ANGLE TESTING & DEMOGRAPHIC OPTIMIZATION: {topic} ---")
+        variants = self.hook_engine.generate_variants(topic, "")
+        for angle_name, hook_text in variants.items():
+            print(f"Testing Angle: {angle_name}")
+            full_script = hook_text + "\n\n" + self.script_engine.generate_script(topic)
+            self.produce_video(
+                title=f"{topic} [{angle_name}]",
+                script_content=full_script,
+                output_prefix=f"test_{angle_name}_{topic[:10].replace(' ', '_')}",
+                publish=True
+            )
+
+    def run_bulk_production(self):
+        """Processes the entire weekly calendar in one massive background render."""
+        plan = self.calendar.get_current_plan()
+        if not plan or "days" not in plan:
+            print("No strategic plan found for bulk production.")
+            return
+
+        print(f"--- INITIALIZING BULK RENDER FOR {len(plan['days'])} PRODUCTIONS ---")
+        for i, day_plan in enumerate(plan['days']):
+            print(f"\n[Bulk {i+1}/{len(plan['days'])}] Targeting: {day_plan['topic']}")
+            
+            # Auto-generate script if not provided
+            script = self.script_engine.generate_script(topic=day_plan['topic'], style=day_plan['style'])
+            
+            self.produce_video(
+                title=day_plan['topic'],
+                script_content=script,
+                output_prefix=f"bulk_{day_plan['day'].lower()}",
+                style=day_plan['style'],
+                voice="auto",
+                generate_thumb=True,
+                enhance_script=True,
+                publish=True
+            )
+
+    def produce_video(self, title, script_content, content_source_name="generic", output_prefix="video", 
+                      style="cinematic_documentary", voice="auto", sign_off=True,
+                      generate_thumb=True, enhance_script=False, publish=False):
+        """Standard pipeline with AI Tone Analysis, Music Selection, Custom Branding & Social Bot."""
+        print(f"Producing branded video: {title}")
+        
+        # 0. Custom Branding
+        slogan = self.branding_engine.generate_slogan(title)
+        branding_intro = f"[Action: Cinematic Title Overlay: {title}]\n[{slogan}]\n\n"
+        script_content = branding_intro + script_content
+
+        # 1. AI Tone & Voice Selection
+        if voice == "auto":
+            print("Analyzing script tone for automatic voice selection...")
+            voice = self.script_engine.analyze_tone(script_content)
+            print(f"AI Recommended Voice: {voice}")
+
+        # 2. Dynamic Music Selection
+        bg_music = self.music_engine.select_music(voice)
+        print(f"AI Recommended Music: {bg_music}")
+
+        # 3. Optional AI Enhancement
+        if enhance_script:
+            print("Enhancing script with AI SFX cues...")
+            script_content = self.script_engine.enhance_script(script_content)
+
         # Add Brand Signature if requested
         if sign_off:
-            signature = "\n\n[Action: Brand Logo Appears]\nThis is Values That Matters."
+            signature = "\n\n[Action: Brand Logo Appears]\nThis is Matters of Value."
             if signature not in script_content:
                 script_content += signature
 
-        # 1. Generate Audio (Voiceover)
+        # 1. Generate Audio
         audio_file = os.path.join(self.config.ASSETS_DIR, f"voiceover_{output_prefix}.mp3")
-        if not os.path.exists(self.config.ASSETS_DIR):
-            os.makedirs(self.config.ASSETS_DIR)
-            
         audio_path = self.voice_engine.generate_audio(text=script_content, output_file=audio_file, voice=voice)
-        if not audio_path:
-            print("Failed to generate audio. Exiting.")
-            return
         
-        print(f"Generated Audio at: {audio_path}")
+        # 2. Fetch Visuals
+        keywords = self.media_engine.extract_keywords_from_script(script_content)
+        query = " ".join(keywords) if keywords else title
+        video_sources = self.media_engine.search_videos(query=query, per_page=5, style=style)
+        
+        # If no videos found, synthesize an AI image
+        if not video_sources:
+            img_path = os.path.join(self.config.ASSETS_DIR, f"ai_synthesis_{output_prefix}.png")
+            fallback_img = self.media_engine.generate_ai_image(query, img_path)
+            video_sources = [fallback_img] if fallback_img else []
 
-        # 2. Fetch Visuals (Background Video)
-        # Try to find relevant visuals, or fallback to generic nature/abstract
-        query = title if len(title) < 20 else "abstract background" 
-        video_sources = self.media_engine.search_videos(query=query, per_page=3, style=style)
-        video_clips = []
-        
-        for i, source in enumerate(video_sources):
-            # If it's already a local path from our stock database, use it directly
-            if os.path.exists(source):
-                video_clips.append(source)
-                continue
-                
-            # Otherwise, download from the URL (Pexels)
-            path = os.path.join(self.config.ASSETS_DIR, f"bg_{output_prefix}_{i}.mp4")
-            local_path = self.media_engine.download_video(source, path)
-            if local_path:
-                video_clips.append(local_path)
-        
-        if not video_clips:
-            print("No video clips found/downloaded. Cannot proceed.")
-            return
-
-        # 3. Prepare Assets (Intro & Music)
-        intro_path = os.path.join(self.config.ASSETS_DIR, "intro.mp4")
-        if not os.path.exists(intro_path): intro_path = None
-        
-        music_path = os.path.join(self.config.ASSETS_DIR, "background_music.mp3")
-        if not os.path.exists(music_path): music_path = None
-
-        # 4. Edit Video
+        # 4. Create Video
         final_video = self.editor.create_video(
-            audio_path=audio_path, 
-            video_paths=video_clips, 
-            script_text=title, 
+            audio_path=audio_path,
+            video_paths=video_sources,
+            script_text=script_content,
             output_filename=f"{output_prefix}_final.mp4",
-            background_music_path=music_path,
-            intro_video_path=intro_path,
+            background_music_path=bg_music,
             style=style
         )
         
         if final_video:
             print(f"Video created successfully: {final_video}")
-            self.publish_content(final_video, title, script_content)
+            # 4. Optional: Generate Branded Thumbnail
+            if generate_thumb:
+                self.thumbnailer.generate_thumbnail(title, style)
+
+            # 5. Optional: Automated Publishing
+            if publish:
+                self.publisher.publish_video(video_path=final_video, title=title, script=script_content)
         else:
             print("Video creation failed.")
+        
+        return final_video
+
+    def produce_long_form(self, title, full_script, style="cinematic_documentary", voice="onyx", 
+                          generate_thumb=True, enhance_script=False, publish=False):
+        """Splits a long script into chapters, renders them, and merges into a feature documentary."""
+        print(f"--- INITIALIZING LONG-FORM PRODUCTION: {title} ---")
+        
+        # 0. Optional AI Enhancement for the ENTIRE script first
+        if enhance_script:
+            print("Enhancing long-form script with AI SFX cues...")
+            full_script = self.script_engine.enhance_script(full_script)
+
+        # 1. Split script into chapters
+        # [Existing split logic...]
+        paragraphs = full_script.split('\n\n')
+        chapters = []
+        current_chapter = []
+        words_per_chapter = 500
+        
+        count = 0
+        for p in paragraphs:
+            current_chapter.append(p)
+            count += len(p.split())
+            if count >= words_per_chapter:
+                chapters.append("\n\n".join(current_chapter))
+                current_chapter = []
+                count = 0
+        if current_chapter:
+            chapters.append("\n\n".join(current_chapter))
+
+        chapter_files = []
+        for i, chapter_text in enumerate(chapters):
+            filename = f"long_{title[:10].replace(' ', '_')}_ch{i}_final.mp4"
+            self.produce_video(
+                title=f"{title} - Part {i+1}",
+                script_content=chapter_text,
+                output_prefix=f"long_{title[:10].replace(' ', '_')}_ch{i}",
+                style=style,
+                voice=voice,
+                sign_off=(i == len(chapters)-1),
+                generate_thumb=False, # Don't generate thumb for individual chapters
+                publish=False # Don't publish individual chapters
+            )
+            
+            chapter_path = os.path.join(self.config.OUTPUT_DIR, filename)
+            if os.path.exists(chapter_path):
+                chapter_files.append(chapter_path)
+
+        # 2. Merge and Finalize
+        if chapter_files:
+            final_filename = f"FEATURE_{title.replace(' ', '_')}.mp4"
+            final_path = self.editor.merge_videos(chapter_files, final_filename)
+            
+            if final_path:
+                if generate_thumb:
+                    self.thumbnailer.generate_thumbnail(title, style)
+                if publish:
+                    self.publisher.publish_video(video_path=final_path, title=title)
+            return final_path
+        return None
 
     NICHE_MAP = {
         "mystery": {
@@ -115,16 +321,16 @@ class FacelessVideoBot:
 
     def run_niche_pipeline(self, niche="mystery", count=1, interactive=True):
         """Automatically discovers topics and produces videos in batches with optional manual review."""
-        if niche not in self.NICHE_MAP:
+        niche_config = self.config.NICHES.get(niche)
+        if not niche_config:
             print(f"Error: Niche '{niche}' not recognized.")
             return
 
-        config = self.NICHE_MAP[niche]
         print(f"--- Starting {niche.upper()} Batch Production ({count} videos) ---")
         
         # 1. Fetch multiple posts
         import random
-        subreddit = random.choice(config["subreddits"])
+        subreddit = random.choice(niche_config["subreddits"])
         posts = self.reddit.get_top_posts(subreddit_name=subreddit, limit=count)
         
         for i, post in enumerate(posts):
