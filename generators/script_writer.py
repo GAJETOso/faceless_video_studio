@@ -59,6 +59,53 @@ class ScriptWriter:
             print(f"Script generation failed: {e}")
             return f"Error generating script for {topic}"
 
+    def generate_from_concept(self, title, concept, style="cinematic_documentary", duration_minutes=2):
+        """
+        Generates a fully polished, production-ready script from a creative brief/concept.
+        The concept can be a free-form description of the video idea, goals, and key points.
+        """
+        if not self.api_key:
+            return f"[INTRO]\nWelcome to Matters of Value. Today we talk about: {title}.\n\n[MAIN CONTENT]\n{concept}\n\n[OUTRO]\nSubscribe for more high-value content."
+
+        word_count = duration_minutes * 130  # ~130 words per minute spoken
+        prompt = f"""You are an expert YouTube scriptwriter for the channel "Matters of Value" — a professional content channel about career growth, financial intelligence, and life strategy.
+
+Write a COMPLETE, production-ready video script based on the following creative brief:
+
+TITLE: {title}
+TARGET DURATION: {duration_minutes} minutes (~{word_count} words when spoken)
+VIDEO STYLE: {style}
+
+CREATIVE BRIEF / CONCEPT:
+{concept}
+
+SCRIPT RULES:
+1. HOOK (first 15-30 seconds): Open with a bold, pattern-interrupting statement or provocative question. Make the viewer STOP scrolling.
+2. CREDIBILITY BRIDGE: In 2-3 sentences, establish why this channel/perspective matters. Do NOT use fluffy language.
+3. VALUE DELIVERY: Break the main content into 3 clear, memorable sections. Each section should have 1 actionable insight.
+4. Include [VISUAL: description] cues for relevant b-roll footage throughout.
+5. Include natural pauses: [PAUSE] where the speaker should breathe for emphasis.
+6. CALL TO ACTION: End with a specific, contextual CTA — tell them what to watch NEXT and why.
+7. Tone: Authoritative but conversational. Like a wise mentor, not a textbook.
+
+IMPORTANT: Write ONLY the final script text — no meta-commentary, no markdown headers, just the clean spoken script with [VISUAL] and [PAUSE] markers inline.
+"""
+        try:
+            response = requests.post(
+                "https://api.openai.com/v1/chat/completions",
+                headers={"Authorization": f"Bearer {self.api_key}"},
+                json={
+                    "model": self.model,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": word_count * 2
+                }
+            )
+            response.raise_for_status()
+            return response.json()['choices'][0]['message']['content']
+        except Exception as e:
+            print(f"Concept-to-script generation failed: {e}")
+            return f"Error generating script from concept for: {title}"
+
     def enhance_script(self, script):
         """Enhances a script with dramatic sound effect cues and visual emphasis."""
         if not self.api_key:

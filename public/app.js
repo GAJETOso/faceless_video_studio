@@ -218,7 +218,7 @@ const analytics = {
 };
 
 // Production Modes Toggle
-const modes = ['short', 'long', 'music'];
+const modes = ['short', 'long', 'music', 'concept'];
 modes.forEach(mode => {
     const btn = document.getElementById(`mode-${mode}`);
     if (btn) {
@@ -226,6 +226,17 @@ modes.forEach(mode => {
             state.activeMode = mode;
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+
+            // Show/hide the concept studio panel
+            const conceptPanel = document.getElementById('concept-studio-panel');
+            const standardPanel = document.getElementById('standard-production-panel');
+            if (mode === 'concept') {
+                if (conceptPanel) conceptPanel.style.display = 'block';
+                if (standardPanel) standardPanel.style.display = 'none';
+            } else {
+                if (conceptPanel) conceptPanel.style.display = 'none';
+                if (standardPanel) standardPanel.style.display = 'block';
+            }
             logToTerminal(`[SYSTEM] Production mode switched to: ${mode.toUpperCase()}`);
         });
     }
@@ -239,12 +250,77 @@ const production = {
         logToTerminal("[SYSTEM] Analyzing production parameters...");
         if (state.activeMode === 'long') production.long();
         else if (state.activeMode === 'music') production.music();
+        else if (state.activeMode === 'concept') production.generateFromConcept();
         else production.custom();
+    },
+
+    generateFromConcept: async () => {
+        const title = document.getElementById('concept-title').value.trim();
+        const concept = document.getElementById('concept-brief').value.trim();
+        const style = document.getElementById('concept-style').value;
+        const duration = parseInt(document.getElementById('concept-duration').value);
+        const btn = document.getElementById('btn-generate-concept');
+
+        if (!title) return showNotification('Please provide a video title.');
+        if (!concept || concept.length < 20) return showNotification('Please describe your concept in more detail.');
+
+        logToTerminal(`[CONCEPT STUDIO] Generating ${duration}-minute script for: "${title}"...`);
+        btn.disabled = true;
+        btn.textContent = 'Generating... Please wait';
+
+        try {
+            const res = await fetch('/api/script/from-concept', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, concept, style, duration_minutes: duration })
+            });
+            const data = await res.json();
+
+            document.getElementById('concept-script-output').value = data.script;
+            document.getElementById('concept-result-panel').style.display = 'block';
+            document.getElementById('concept-script-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            logToTerminal(`[CONCEPT STUDIO] Script generated! Review and edit below, then click "Send to Production".`);
+            showNotification('Script generated successfully!');
+        } catch (err) {
+            logToTerminal(`[ERROR] Concept generation failed: ${err.message}`);
+            showNotification('Script generation failed. Check logs.');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<span class="btn-icon">&#x2728;</span> Generate Script from Concept';
+        }
+    },
+
+    copyConceptScript: () => {
+        const textarea = document.getElementById('concept-script-output');
+        navigator.clipboard.writeText(textarea.value).then(() => showNotification('Script copied to clipboard!'));
+    },
+
+    sendConceptToProduction: () => {
+        const title = document.getElementById('concept-title').value;
+        const script = document.getElementById('concept-script-output').value;
+        const style = document.getElementById('concept-style').value;
+
+        // Transfer to the standard production panel
+        document.getElementById('custom-title').value = title;
+        document.getElementById('custom-script').value = script;
+        document.getElementById('custom-style').value = style;
+
+        // Switch to standard mode
+        state.activeMode = 'short';
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('mode-short').classList.add('active');
+        document.getElementById('concept-studio-panel').style.display = 'none';
+        document.getElementById('standard-production-panel').style.display = 'block';
+
+        // Scroll to production panel
+        document.getElementById('standard-production-panel').scrollIntoView({ behavior: 'smooth' });
+        logToTerminal(`[CONCEPT STUDIO] Script loaded into Production Suite. Review settings and click "Initialize Render Pipeline".`);
+        showNotification('Script sent to Production! Set your voice and click Render.');
     },
 
     music: async () => {
         const title = document.getElementById('custom-title').value;
-        const genre = prompt("Enter music genre (e.g. hip-hop, cinematic, cyberpunk):", "hip-hop");
+        const genre = prompt("Enter music genre (e.g. hip-hop, rnb, afrobeat, cinematic):", "hip-hop");
 
         if (!title) return alert("Please enter a title/topic for the song.");
 

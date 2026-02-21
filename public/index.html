@@ -151,262 +151,336 @@
                         <button class="mode-btn" id="mode-long">Feature Documentary (Hour+)</button>
                         <button class="mode-btn" id="mode-music" style="border-color: #00FF00;">Music Video /
                             Song</button>
+                        <button class="mode-btn" id="mode-concept" style="border-color: var(--accent-cyan);">Concept
+                            Studio ✦</button>
                     </div>
-                    <div class="input-group">
-                        <label>Documentary Title</label>
-                        <input type="text" id="custom-title" placeholder="e.g. The Shadow of the Silk Road">
-                    </div>
-                    <div class="input-group">
-                        <label>Narration Script</label>
-                        <textarea id="custom-script"
-                            placeholder="Enter your high-stakes script here... For feature films, provide the full structured script."></textarea>
-                    </div>
-                    <div class="row">
-                        <div class="input-group">
-                            <label>Script Structure</label>
-                            <select id="custom-structure">
-                                <option value="cinematic">Cinematic Documentary (Story-Led)</option>
-                                <option value="value_driven">Value-Driven (Hook, Meat, CTA)</option>
-                            </select>
+
+                    <!-- CONCEPT STUDIO PANEL -->
+                    <div id="concept-studio-panel" style="display:none;">
+                        <div class="concept-studio-header">
+                            <h3 style="color: var(--accent-cyan); margin-bottom: 4px;">Concept Studio</h3>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">Describe your video idea in plain
+                                language. The AI writes the full production script for you.</p>
                         </div>
                         <div class="input-group">
-                            <label>Visual Aesthetic</label>
-                            <select id="custom-style">
-                                <option value="cinematic_documentary">Cinematic Documentary</option>
-                                <option value="finance_wealth">Finance & Wealth</option>
-                                <option value="breaking_viral">Breaking Viral</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-group">
-                            <label>Pro Voiceover</label>
-                            <select id="custom-voice">
-                                <option value="auto">Auto (AI Selection)</option>
-                                <option value="onyx">Onyx (Deep/Mystery)</option>
-                                <option value="alloy">Alloy (Sophisticated/Finance)</option>
-                                <option value="echo">Echo (Energetic/News)</option>
-                            </select>
+                            <label>Video Title</label>
+                            <input type="text" id="concept-title"
+                                placeholder="e.g. Welcome to Matters of Value: Stop Being Busy, Start Being Valuable"
+                                style="font-size: 0.95rem;">
                         </div>
                         <div class="input-group">
-                            <!-- Placeholder or additional setting -->
+                            <label>Your Creative Brief / Concept</label>
+                            <textarea id="concept-brief" rows="8"
+                                placeholder="Paste your concept here... describe your goals, key points, target audience, and any specific talking points. Example:&#10;&#10;Goal: Define what 'value' means and why viewers should subscribe.&#10;Introduce myself briefly — mention professional background for credibility.&#10;Explain this channel isn't about hustle, but high-ROI strategies for career and finances.&#10;Key point: Stop measuring success by busyness. Start measuring by impact.&#10;CTA: Subscribe for weekly value-driven strategies."
+                                style="min-height: 200px; font-size: 0.9rem; line-height: 1.6;"></textarea>
                         </div>
-                    </div>
-
-                    <div class="pipeline-toggles">
-                        <label class="toggle-item">
-                            <input type="checkbox" id="toggle-thumb" checked>
-                            <span class="toggle-label">Generate Branded YouTube Thumbnail</span>
-                        </label>
-                        <label class="toggle-item">
-                            <input type="checkbox" id="toggle-enhance">
-                            <span class="toggle-label">AI Script Enhancement (Dramatic SFX)</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" id="toggle-lipsync" checked>
-                            <span style="font-size: 11px;">Advanced Lip-Sync Sync</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" id="toggle-multicam" checked>
-                            <span style="font-size: 11px;">Multi-Camera Cinematic Cuts</span>
-                        </label>
-                        <label class="toggle-item">
-                            <input type="checkbox" id="toggle-publish">
-                            <span class="toggle-label">Automated Publishing (YouTube/TikTok)</span>
-                        </label>
-                        <label class="toggle-item">
-                            <input type="checkbox" id="toggle-vertical">
-                            <span class="toggle-label" style="color: var(--accent-cyan);">Vertical Video (9:16 for
-                                TikTok/Shorts)</span>
-                        </label>
-                    </div>
-
-                    <div class="production-actions">
-                        <button class="btn-primary" id="start-production-btn">Initialize Render Pipeline</button>
-                        <div class="action-row">
-                            <button class="btn-secondary" onclick="production.intl()"
-                                title="Translate & Dub in 5+ Languages">Global Broadcast</button>
-                            <button class="btn-secondary" onclick="production.test()"
-                                title="Test 3+ Demographic Hooks">Demographic Optimization</button>
-                            <button class="btn-secondary" style="border-color: var(--accent-cyan);"
-                                onclick="production.designHook()">Design CGI Super Hook</button>
-                            <button class="btn-secondary" style="border-color: #ffd700;"
-                                onclick="production.planSeries()">Plan
-                                3-Part Series</button>
-                            <button class="btn-secondary" style="border-color: #ff0055;"
-                                onclick="production.testThumbnails()">Test Thumbnails (A/B)</button>
-                        </div>
-                        <div class="action-row" style="margin-top: 10px;">
-                            <button class="btn-secondary" style="border-color: #00ff88;"
-                                onclick="production.findSponsors()">Sponsor Integration Mode</button>
-                            <button class="btn-secondary" style="border-color: #aa00ff;"
-                                onclick="production.repurposeShorts()">Shorts/Reels Repurposing</button>
-                        </div>
-                        <!-- Personalization & Publishing Row -->
-                        <div class="action-row" style="margin-top: 10px;">
-                            <button class="btn-secondary" style="border-color: #ff9900;"
-                                onclick="production.openVoiceCloning()">AI Voice Cloning</button>
-                            <button class="btn-secondary" style="border-color: #00ccff;"
-                                onclick="production.triggerPublishing()">Automated Publishing</button>
-                        </div>
-                    </div>
-
-                    <!-- Voice Cloning Modal (Hidden by default) -->
-                    <div id="voice-clone-modal" class="monobox"
-                        style="display: none; border-color: #ff9900; margin-top: 20px;">
-                        <label>AI VOICE CLONING STUDIO</label>
-                        <div class="input-group">
-                            <label>Voice Name</label>
-                            <input type="text" id="clone-name" placeholder="E.g., My Narrator Voice">
-                        </div>
-                        <div class="input-group">
-                            <label>Sample Audio Path (WAV/MP3)</label>
-                            <input type="text" id="clone-sample" placeholder="/path/to/sample.wav">
-                        </div>
-                        <button class="btn-primary" onclick="production.cloneVoice()">Start Cloning Process</button>
-                        <div id="clone-status" style="margin-top: 10px; font-size: 11px; color: #ccc;"></div>
-                    </div>
-
-                    <div id="publish-output" class="monobox"
-                        style="margin-top: 20px; display: none; border-color: #00ccff;">
-                        <label>PUBLISHING STATUS</label>
-                        <div id="publish-log" style="font-size: 11px; margin-top: 10px;"></div>
-                    </div>
-                    <div id="hook-design-output" class="monobox"
-                        style="margin-top: 20px; display: none; border-color: var(--accent-cyan);">
-                        <label>AI CGI HOOK DESIGN (Visual Blueprint)</label>
-                        <p id="hook-design-text" style="font-size: 11px; color: #fff; line-height: 1.6;"></p>
-                    </div>
-
-                    <div id="series-plan-output" class="monobox"
-                        style="margin-top: 20px; display: none; border-color: #ffd700;">
-                        <label>TRILOGY SERIES PLAN (3-Part Arc)</label>
-                        <pre id="series-plan-text"
-                            style="font-size: 11px; color: #fff; white-space: pre-wrap; margin-top: 10px;"></pre>
-                    </div>
-
-                    <div id="thumb-ab-output" class="monobox"
-                        style="margin-top: 20px; display: none; border-color: #ff0055;">
-                        <label>THUMBNAIL A/B TEST CONCEPTS</label>
-                        <div id="thumb-ab-grid"
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
-                            <!-- Injected via JS -->
-                        </div>
-                    </div>
-
-                    <div id="sponsor-output" class="monobox"
-                        style="margin-top: 20px; display: none; border-color: #00ff88;">
-                        <label>SPONSOR INTEGRATION (Safe Spots)</label>
-                        <div id="sponsor-list" style="font-size: 11px; margin-top: 10px;"></div>
-                    </div>
-
-                    <div id="shorts-output" class="monobox"
-                        style="margin-top: 20px; display: none; border-color: #aa00ff;">
-                        <label>VIRAL SHORTS/REELS (Suggested Clips)</label>
-                        <div id="shorts-list" style="font-size: 11px; margin-top: 10px;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-library" class="tab-content">
-                <div id="video-list" class="grid-view">
-                    <!-- Videos will be injected here -->
-                </div>
-
-                <div class="dashboard-card" style="margin-top: 40px; border-color: var(--accent-cyan);">
-                    <h2>Engagement Center: Perspective Defense</h2>
-                    <div class="input-group">
-                        <label>Viewer Comment</label>
-                        <textarea id="viewer-comment" placeholder="Paste a challenging or viral comment here..."
-                            style="height: 80px;"></textarea>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn-secondary" style="flex: 1;" onclick="library.draftResponse()">Draft Strategic
-                            Response</button>
-                        <button class="btn-secondary" style="flex: 1; border-color: var(--accent-gold);"
-                            onclick="library.draftCommunity()">Draft Community Kit</button>
-                    </div>
-
-                    <div id="draft-output" class="monobox" style="margin-top: 20px; display: none;">
-                        <label>AI STRATEGIC REPLY (Non-Obvious Take Inspired)</label>
-                        <p id="reply-text" style="font-size: 12px; color: #fff; line-height: 1.6;"></p>
-                    </div>
-
-                    <div id="community-output" class="monobox"
-                        style="margin-top: 20px; display: none; border-color: var(--accent-gold);">
-                        <label>VIRAL COMMUNITY PACKAGE (Polls & Teasers)</label>
-                        <pre id="community-text"
-                            style="font-size: 11px; color: #fff; white-space: pre-wrap; margin-top: 10px;"></pre>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-analytics" class="tab-content">
-                <div class="production-suite settings-grid">
-                    <div class="settings-col full-width">
-                        <h2>Studio Performance Metrics</h2>
-                        <div class="analytics-row">
-                            <div class="chart-box">
-                                <label>Daily Render Counts</label>
-                                <div class="bar-chart" id="velocity-chart"></div>
+                        <div class="row">
+                            <div class="input-group">
+                                <label>Video Style</label>
+                                <select id="concept-style">
+                                    <option value="cinematic_documentary">Cinematic Documentary</option>
+                                    <option value="finance_wealth">Finance & Wealth</option>
+                                    <option value="motivational">Motivational / Inspirational</option>
+                                    <option value="breaking_viral">Breaking / Viral News</option>
+                                </select>
                             </div>
-                            <div class="chart-box">
-                                <label>Content Distribution</label>
-                                <div class="pie-chart" id="niche-chart"></div>
+                            <div class="input-group">
+                                <label>Target Duration</label>
+                                <select id="concept-duration">
+                                    <option value="1">~1 Minute (Short-form)</option>
+                                    <option value="2" selected>~2 Minutes (Standard)</option>
+                                    <option value="3">~3 Minutes (Extended)</option>
+                                    <option value="5">~5 Minutes (Deep Dive)</option>
+                                    <option value="10">~10 Minutes (Long-form)</option>
+                                </select>
                             </div>
                         </div>
+                        <div class="production-actions" style="margin-top: 1rem;">
+                            <button class="btn-primary" id="btn-generate-concept"
+                                onclick="production.generateFromConcept()">
+                                <span class="btn-icon">&#x2728;</span> Generate Script from Concept
+                            </button>
+                        </div>
+
+                        <!-- GENERATED SCRIPT PREVIEW -->
+                        <div id="concept-result-panel" style="display:none; margin-top: 2rem;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                <h4 style="color: var(--text-primary);">Generated Script — Review &amp; Edit</h4>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn-secondary btn-sm" onclick="production.copyConceptScript()"
+                                        style="padding: 6px 14px; font-size: 0.8rem;">Copy</button>
+                                    <button class="btn-primary btn-sm" onclick="production.sendConceptToProduction()"
+                                        style="padding: 6px 14px; font-size: 0.8rem;">Send to Production
+                                        &#x2192;</button>
+                                </div>
+                            </div>
+                            <textarea id="concept-script-output"
+                                style="width: 100%; min-height: 300px; background: var(--surface-1); border: 1px solid var(--accent-cyan); border-radius: 8px; padding: 1rem; color: var(--text-primary); font-size: 0.88rem; line-height: 1.7; font-family: 'Georgia', serif; resize: vertical;"></textarea>
+                            <p style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.5rem;">You can freely
+                                edit this script before sending it to production.</p>
+                        </div>
                     </div>
 
-                    <div class="settings-col full-width">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px;">
-                            <h2 style="margin: 0;">📅 Weekly Strategy Calendar</h2>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="btn-primary"
-                                    style="margin: 0; width: auto; padding: 10px 20px; background: var(--accent-cyan); color: #000;"
-                                    onclick="analytics.runBulkProduction()">Bulk Render Entire Week</button>
-                                <button class="btn-primary" style="margin: 0; width: auto; padding: 10px 20px;"
-                                    onclick="analytics.generateCalendar()">Generate AI Plan</button>
+                    <!-- STANDARD PRODUCTION PANEL -->
+                    <div id="standard-production-panel">
+                        <div class="input-group">
+                            <label>Documentary Title</label>
+                            <input type="text" id="custom-title" placeholder="e.g. The Shadow of the Silk Road">
+                        </div>
+                        <div class="input-group">
+                            <label>Narration Script</label>
+                            <textarea id="custom-script"
+                                placeholder="Enter your high-stakes script here... For feature films, provide the full structured script."></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="input-group">
+                                <label>Script Structure</label>
+                                <select id="custom-structure">
+                                    <option value="cinematic">Cinematic Documentary (Story-Led)</option>
+                                    <option value="value_driven">Value-Driven (Hook, Meat, CTA)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Visual Aesthetic</label>
+                                <select id="custom-style">
+                                    <option value="cinematic_documentary">Cinematic Documentary</option>
+                                    <option value="finance_wealth">Finance & Wealth</option>
+                                    <option value="breaking_viral">Breaking Viral</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="calendar-container" id="calendar-view">
-                            <div class="loading">Fetching strategic plan...</div>
+                        <div class="row">
+                            <div class="input-group">
+                                <label>Pro Voiceover</label>
+                                <select id="custom-voice">
+                                    <option value="auto">Auto (AI Selection)</option>
+                                    <option value="onyx">Onyx (Deep/Mystery)</option>
+                                    <option value="alloy">Alloy (Sophisticated/Finance)</option>
+                                    <option value="echo">Echo (Energetic/News)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <!-- Placeholder or additional setting -->
+                            </div>
+                        </div>
+
+                        <div class="pipeline-toggles">
+                            <label class="toggle-item">
+                                <input type="checkbox" id="toggle-thumb" checked>
+                                <span class="toggle-label">Generate Branded YouTube Thumbnail</span>
+                            </label>
+                            <label class="toggle-item">
+                                <input type="checkbox" id="toggle-enhance">
+                                <span class="toggle-label">AI Script Enhancement (Dramatic SFX)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="toggle-lipsync" checked>
+                                <span style="font-size: 11px;">Advanced Lip-Sync Sync</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="toggle-multicam" checked>
+                                <span style="font-size: 11px;">Multi-Camera Cinematic Cuts</span>
+                            </label>
+                            <label class="toggle-item">
+                                <input type="checkbox" id="toggle-publish">
+                                <span class="toggle-label">Automated Publishing (YouTube/TikTok)</span>
+                            </label>
+                            <label class="toggle-item">
+                                <input type="checkbox" id="toggle-vertical">
+                                <span class="toggle-label" style="color: var(--accent-cyan);">Vertical Video (9:16 for
+                                    TikTok/Shorts)</span>
+                            </label>
+                        </div>
+
+                        <div class="production-actions">
+                            <button class="btn-primary" id="start-production-btn">Initialize Render Pipeline</button>
+                            <div class="action-row">
+                                <button class="btn-secondary" onclick="production.intl()"
+                                    title="Translate & Dub in 5+ Languages">Global Broadcast</button>
+                                <button class="btn-secondary" onclick="production.test()"
+                                    title="Test 3+ Demographic Hooks">Demographic Optimization</button>
+                                <button class="btn-secondary" style="border-color: var(--accent-cyan);"
+                                    onclick="production.designHook()">Design CGI Super Hook</button>
+                                <button class="btn-secondary" style="border-color: #ffd700;"
+                                    onclick="production.planSeries()">Plan
+                                    3-Part Series</button>
+                                <button class="btn-secondary" style="border-color: #ff0055;"
+                                    onclick="production.testThumbnails()">Test Thumbnails (A/B)</button>
+                            </div>
+                            <div class="action-row" style="margin-top: 10px;">
+                                <button class="btn-secondary" style="border-color: #00ff88;"
+                                    onclick="production.findSponsors()">Sponsor Integration Mode</button>
+                                <button class="btn-secondary" style="border-color: #aa00ff;"
+                                    onclick="production.repurposeShorts()">Shorts/Reels Repurposing</button>
+                            </div>
+                            <!-- Personalization & Publishing Row -->
+                            <div class="action-row" style="margin-top: 10px;">
+                                <button class="btn-secondary" style="border-color: #ff9900;"
+                                    onclick="production.openVoiceCloning()">AI Voice Cloning</button>
+                                <button class="btn-secondary" style="border-color: #00ccff;"
+                                    onclick="production.triggerPublishing()">Automated Publishing</button>
+                            </div>
+                        </div>
+
+                        <!-- Voice Cloning Modal (Hidden by default) -->
+                        <div id="voice-clone-modal" class="monobox"
+                            style="display: none; border-color: #ff9900; margin-top: 20px;">
+                            <label>AI VOICE CLONING STUDIO</label>
+                            <div class="input-group">
+                                <label>Voice Name</label>
+                                <input type="text" id="clone-name" placeholder="E.g., My Narrator Voice">
+                            </div>
+                            <div class="input-group">
+                                <label>Sample Audio Path (WAV/MP3)</label>
+                                <input type="text" id="clone-sample" placeholder="/path/to/sample.wav">
+                            </div>
+                            <button class="btn-primary" onclick="production.cloneVoice()">Start Cloning Process</button>
+                            <div id="clone-status" style="margin-top: 10px; font-size: 11px; color: #ccc;"></div>
+                        </div>
+
+                        <div id="publish-output" class="monobox"
+                            style="margin-top: 20px; display: none; border-color: #00ccff;">
+                            <label>PUBLISHING STATUS</label>
+                            <div id="publish-log" style="font-size: 11px; margin-top: 10px;"></div>
+                        </div>
+                        <div id="hook-design-output" class="monobox"
+                            style="margin-top: 20px; display: none; border-color: var(--accent-cyan);">
+                            <label>AI CGI HOOK DESIGN (Visual Blueprint)</label>
+                            <p id="hook-design-text" style="font-size: 11px; color: #fff; line-height: 1.6;"></p>
+                        </div>
+
+                        <div id="series-plan-output" class="monobox"
+                            style="margin-top: 20px; display: none; border-color: #ffd700;">
+                            <label>TRILOGY SERIES PLAN (3-Part Arc)</label>
+                            <pre id="series-plan-text"
+                                style="font-size: 11px; color: #fff; white-space: pre-wrap; margin-top: 10px;"></pre>
+                        </div>
+
+                        <div id="thumb-ab-output" class="monobox"
+                            style="margin-top: 20px; display: none; border-color: #ff0055;">
+                            <label>THUMBNAIL A/B TEST CONCEPTS</label>
+                            <div id="thumb-ab-grid"
+                                style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
+                                <!-- Injected via JS -->
+                            </div>
+                        </div>
+
+                        <div id="sponsor-output" class="monobox"
+                            style="margin-top: 20px; display: none; border-color: #00ff88;">
+                            <label>SPONSOR INTEGRATION (Safe Spots)</label>
+                            <div id="sponsor-list" style="font-size: 11px; margin-top: 10px;"></div>
+                        </div>
+
+                        <div id="shorts-output" class="monobox"
+                            style="margin-top: 20px; display: none; border-color: #aa00ff;">
+                            <label>VIRAL SHORTS/REELS (Suggested Clips)</label>
+                            <div id="shorts-list" style="font-size: 11px; margin-top: 10px;"></div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="settings-col full-width">
-                        <div class="monobox" style="margin-top: 20px;">
-                            <label>Production Ledger (Recent Exports)</label>
-                            <div id="production-ledger" style="font-size: 11px;"></div>
+                <div id="tab-library" class="tab-content">
+                    <div id="video-list" class="grid-view">
+                        <!-- Videos will be injected here -->
+                    </div>
+
+                    <div class="dashboard-card" style="margin-top: 40px; border-color: var(--accent-cyan);">
+                        <h2>Engagement Center: Perspective Defense</h2>
+                        <div class="input-group">
+                            <label>Viewer Comment</label>
+                            <textarea id="viewer-comment" placeholder="Paste a challenging or viral comment here..."
+                                style="height: 80px;"></textarea>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-secondary" style="flex: 1;" onclick="library.draftResponse()">Draft
+                                Strategic
+                                Response</button>
+                            <button class="btn-secondary" style="flex: 1; border-color: var(--accent-gold);"
+                                onclick="library.draftCommunity()">Draft Community Kit</button>
+                        </div>
+
+                        <div id="draft-output" class="monobox" style="margin-top: 20px; display: none;">
+                            <label>AI STRATEGIC REPLY (Non-Obvious Take Inspired)</label>
+                            <p id="reply-text" style="font-size: 12px; color: #fff; line-height: 1.6;"></p>
+                        </div>
+
+                        <div id="community-output" class="monobox"
+                            style="margin-top: 20px; display: none; border-color: var(--accent-gold);">
+                            <label>VIRAL COMMUNITY PACKAGE (Polls & Teasers)</label>
+                            <pre id="community-text"
+                                style="font-size: 11px; color: #fff; white-space: pre-wrap; margin-top: 10px;"></pre>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="tab-settings" class="tab-content">
-                <div class="production-suite settings-grid">
-                    <div class="settings-col">
-                        <h2>⚙️ Infrastructure</h2>
-                        <div id="settings-infra" class="config-section"></div>
-                    </div>
-                    <div class="settings-col">
-                        <h2>🎨 Content Styles</h2>
-                        <div id="settings-styles" class="config-section"></div>
-                    </div>
-                    <div class="settings-col">
-                        <h2>🎙️ Voice Presets</h2>
-                        <div id="settings-voices" class="config-section"></div>
-                    </div>
+                <div id="tab-analytics" class="tab-content">
+                    <div class="production-suite settings-grid">
+                        <div class="settings-col full-width">
+                            <h2>Studio Performance Metrics</h2>
+                            <div class="analytics-row">
+                                <div class="chart-box">
+                                    <label>Daily Render Counts</label>
+                                    <div class="bar-chart" id="velocity-chart"></div>
+                                </div>
+                                <div class="chart-box">
+                                    <label>Content Distribution</label>
+                                    <div class="pie-chart" id="niche-chart"></div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <button class="btn-primary full-width" onclick="settings.save()">Synchronize All Systems</button>
+                        <div class="settings-col full-width">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px;">
+                                <h2 style="margin: 0;">📅 Weekly Strategy Calendar</h2>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn-primary"
+                                        style="margin: 0; width: auto; padding: 10px 20px; background: var(--accent-cyan); color: #000;"
+                                        onclick="analytics.runBulkProduction()">Bulk Render Entire Week</button>
+                                    <button class="btn-primary" style="margin: 0; width: auto; padding: 10px 20px;"
+                                        onclick="analytics.generateCalendar()">Generate AI Plan</button>
+                                </div>
+                            </div>
+                            <div class="calendar-container" id="calendar-view">
+                                <div class="loading">Fetching strategic plan...</div>
+                            </div>
+                        </div>
+
+                        <div class="settings-col full-width">
+                            <div class="monobox" style="margin-top: 20px;">
+                                <label>Production Ledger (Recent Exports)</label>
+                                <div id="production-ledger" style="font-size: 11px;"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="terminal-container dashboard-card" style="margin-top: 30px; width: 100%;">
-                <h2>Production Terminal</h2>
-                <div class="terminal" id="terminal-feed">
-                    <div>[SYSTEM] Matters of Value Studio Online...</div>
+
+                <div id="tab-settings" class="tab-content">
+                    <div class="production-suite settings-grid">
+                        <div class="settings-col">
+                            <h2>⚙️ Infrastructure</h2>
+                            <div id="settings-infra" class="config-section"></div>
+                        </div>
+                        <div class="settings-col">
+                            <h2>🎨 Content Styles</h2>
+                            <div id="settings-styles" class="config-section"></div>
+                        </div>
+                        <div class="settings-col">
+                            <h2>🎙️ Voice Presets</h2>
+                            <div id="settings-voices" class="config-section"></div>
+                        </div>
+
+                        <button class="btn-primary full-width" onclick="settings.save()">Synchronize All
+                            Systems</button>
+                    </div>
                 </div>
-            </div>
+                <div class="terminal-container dashboard-card" style="margin-top: 30px; width: 100%;">
+                    <h2>Production Terminal</h2>
+                    <div class="terminal" id="terminal-feed">
+                        <div>[SYSTEM] Matters of Value Studio Online...</div>
+                    </div>
+                </div>
         </main>
     </div>
 

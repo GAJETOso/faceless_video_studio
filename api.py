@@ -31,9 +31,26 @@ class ScriptRequest(BaseModel):
     publish: Optional[bool] = False
     vertical: Optional[bool] = False
 
+class ConceptRequest(BaseModel):
+    title: str
+    concept: str
+    style: Optional[str] = "cinematic_documentary"
+    duration_minutes: Optional[int] = 2
+
 @app.get("/")
 async def root():
     return RedirectResponse(url="/dashboard")
+
+@app.post("/api/script/from-concept")
+async def script_from_concept(request: ConceptRequest):
+    """Generates a full production script from a free-form creative brief/concept."""
+    script = bot.script_engine.generate_from_concept(
+        title=request.title,
+        concept=request.concept,
+        style=request.style,
+        duration_minutes=request.duration_minutes
+    )
+    return {"title": request.title, "script": script, "style": request.style}
 
 @app.get("/api/settings")
 async def get_settings():
