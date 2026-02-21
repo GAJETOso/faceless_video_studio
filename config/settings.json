@@ -1,0 +1,74 @@
+{
+    "OPENAI_API_KEY": "OPENAI_API_KEY",
+    "PEXELS_API_KEY": "PEXEL_API_KEY",
+    "REDDIT_CLIENT_ID": "your_reddit_client_id",
+    "REDDIT_CLIENT_SECRET": "your_reddit_client_secret",
+    "REDDIT_USER_AGENT": "FacelessVideoBot/1.0",
+    "ASSETS_DIR": "assets",
+    "OUTPUT_DIR": "output",
+    "STOCK_DIR": "assets/stock",
+    "DOC_TITLE_TEMPLATE": "VALUES THAT MATTERS: {title}",
+    "CHAPTER_LENGTH_MINUTES": 5,
+    "STYLES": {
+        "cinematic_documentary": {
+            "font": "Courier-Bold",
+            "fontsize": 60,
+            "color": "white",
+            "pos": "bottom",
+            "grain": true,
+            "vignette": true,
+            "prompt": "Write a 90-second professional documentary script. Short sentences. High suspense.",
+            "aesthetic": "cinematic moody lighting, tech server, mysterious dark technology"
+        },
+        "finance_wealth": {
+            "font": "Georgia-Bold",
+            "fontsize": 75,
+            "color": "#FFD700",
+            "pos": "top",
+            "vignette": true,
+            "prompt": "Professional finance script. Sophisticated and wealth-focused.",
+            "aesthetic": "luxury office, stock market charts, gold bars, city skyline"
+        },
+        "music_video": {
+            "font": "Impact",
+            "fontsize": 80,
+            "color": "#00FF00",
+            "pos": "center",
+            "grain": true,
+            "aesthetic": "neon city, fast cars, abstract glitch, rave party, strobe lights"
+        }
+    },
+    "VOICES": {
+        "onyx": {
+            "engine": "openai",
+            "desc": "Deep/Mystery"
+        },
+        "alloy": {
+            "engine": "openai",
+            "desc": "Finance/Neutral"
+        },
+        "echo": {
+            "engine": "openai",
+            "desc": "Viral/Energetic"
+        }
+    },
+    "NICHES": {
+        "mystery": {
+            "subreddits": [
+                "UnresolvedMysteries"
+            ],
+            "style": "cinematic_documentary",
+            "voice": "onyx",
+            "structure": "cinematic"
+        },
+        "finance": {
+            "subreddits": [
+                "finance",
+                "WallStreetBets"
+            ],
+            "style": "finance_wealth",
+            "voice": "alloy",
+            "structure": "value_driven"
+        }
+    }
+}

@@ -1,0 +1,32 @@
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+
+# Distribution / Packaging
+build/
+dist/
+*.egg-info/
+
+# Project Specific
+output/*.mp4
+output/*.mp3
+*.log
+
+# Generated Assets (don't commit downloaded temp media)
+assets/bg_*.mp4
+assets/voiceover_*.mp3
+# Keep intro.mp4 and background_music.mp3 if you want them tracked, 
+# otherwise uncomment the lines below:
+# assets/intro.mp4
+# assets/background_music.mp3
+
+# IDEs
+.vscode/
+.idea/
