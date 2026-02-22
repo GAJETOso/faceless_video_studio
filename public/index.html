@@ -313,6 +313,8 @@
                                     onclick="production.findSponsors()">Sponsor Integration Mode</button>
                                 <button class="btn-secondary" style="border-color: #aa00ff;"
                                     onclick="production.repurposeShorts()">Shorts/Reels Repurposing</button>
+                                <button class="btn-secondary" style="border-color: #00d4ff;"
+                                    onclick="production.analyzeMusic()">Music Theme Intelligence</button>
                             </div>
                             <!-- Personalization & Publishing Row -->
                             <div class="action-row" style="margin-top: 10px;">
@@ -377,110 +379,119 @@
                             <label>VIRAL SHORTS/REELS (Suggested Clips)</label>
                             <div id="shorts-list" style="font-size: 11px; margin-top: 10px;"></div>
                         </div>
-                    </div>
-                </div>
 
-                <div id="tab-library" class="tab-content">
-                    <div id="video-list" class="grid-view">
-                        <!-- Videos will be injected here -->
-                    </div>
-
-                    <div class="dashboard-card" style="margin-top: 40px; border-color: var(--accent-cyan);">
-                        <h2>Engagement Center: Perspective Defense</h2>
-                        <div class="input-group">
-                            <label>Viewer Comment</label>
-                            <textarea id="viewer-comment" placeholder="Paste a challenging or viral comment here..."
-                                style="height: 80px;"></textarea>
-                        </div>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="btn-secondary" style="flex: 1;" onclick="library.draftResponse()">Draft
-                                Strategic
-                                Response</button>
-                            <button class="btn-secondary" style="flex: 1; border-color: var(--accent-gold);"
-                                onclick="library.draftCommunity()">Draft Community Kit</button>
-                        </div>
-
-                        <div id="draft-output" class="monobox" style="margin-top: 20px; display: none;">
-                            <label>AI STRATEGIC REPLY (Non-Obvious Take Inspired)</label>
-                            <p id="reply-text" style="font-size: 12px; color: #fff; line-height: 1.6;"></p>
-                        </div>
-
-                        <div id="community-output" class="monobox"
-                            style="margin-top: 20px; display: none; border-color: var(--accent-gold);">
-                            <label>VIRAL COMMUNITY PACKAGE (Polls & Teasers)</label>
-                            <pre id="community-text"
-                                style="font-size: 11px; color: #fff; white-space: pre-wrap; margin-top: 10px;"></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="tab-analytics" class="tab-content">
-                    <div class="production-suite settings-grid">
-                        <div class="settings-col full-width">
-                            <h2>Studio Performance Metrics</h2>
-                            <div class="analytics-row">
-                                <div class="chart-box">
-                                    <label>Daily Render Counts</label>
-                                    <div class="bar-chart" id="velocity-chart"></div>
-                                </div>
-                                <div class="chart-box">
-                                    <label>Content Distribution</label>
-                                    <div class="pie-chart" id="niche-chart"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="settings-col full-width">
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px;">
-                                <h2 style="margin: 0;">📅 Weekly Strategy Calendar</h2>
-                                <div style="display: flex; gap: 10px;">
-                                    <button class="btn-primary"
-                                        style="margin: 0; width: auto; padding: 10px 20px; background: var(--accent-cyan); color: #000;"
-                                        onclick="analytics.runBulkProduction()">Bulk Render Entire Week</button>
-                                    <button class="btn-primary" style="margin: 0; width: auto; padding: 10px 20px;"
-                                        onclick="analytics.generateCalendar()">Generate AI Plan</button>
-                                </div>
-                            </div>
-                            <div class="calendar-container" id="calendar-view">
-                                <div class="loading">Fetching strategic plan...</div>
-                            </div>
-                        </div>
-
-                        <div class="settings-col full-width">
-                            <div class="monobox" style="margin-top: 20px;">
-                                <label>Production Ledger (Recent Exports)</label>
-                                <div id="production-ledger" style="font-size: 11px;"></div>
+                        <div id="music-output" class="monobox"
+                            style="margin-top: 20px; display: none; border-color: #00d4ff;">
+                            <label>AI MUSIC PRODUCTION BRIEF</label>
+                            <div id="music-brief-text"
+                                style="font-size: 11px; color: #fff; line-height: 1.6; white-space: pre-wrap; margin-top: 10px;">
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div id="tab-settings" class="tab-content">
-                    <div class="production-suite settings-grid">
-                        <div class="settings-col">
-                            <h2>⚙️ Infrastructure</h2>
-                            <div id="settings-infra" class="config-section"></div>
-                        </div>
-                        <div class="settings-col">
-                            <h2>🎨 Content Styles</h2>
-                            <div id="settings-styles" class="config-section"></div>
-                        </div>
-                        <div class="settings-col">
-                            <h2>🎙️ Voice Presets</h2>
-                            <div id="settings-voices" class="config-section"></div>
-                        </div>
+            <div id="tab-library" class="tab-content">
+                <div id="video-list" class="grid-view">
+                    <!-- Videos will be injected here -->
+                </div>
 
-                        <button class="btn-primary full-width" onclick="settings.save()">Synchronize All
-                            Systems</button>
+                <div class="dashboard-card" style="margin-top: 40px; border-color: var(--accent-cyan);">
+                    <h2>Engagement Center: Perspective Defense</h2>
+                    <div class="input-group">
+                        <label>Viewer Comment</label>
+                        <textarea id="viewer-comment" placeholder="Paste a challenging or viral comment here..."
+                            style="height: 80px;"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-secondary" style="flex: 1;" onclick="library.draftResponse()">Draft
+                            Strategic
+                            Response</button>
+                        <button class="btn-secondary" style="flex: 1; border-color: var(--accent-gold);"
+                            onclick="library.draftCommunity()">Draft Community Kit</button>
+                    </div>
+
+                    <div id="draft-output" class="monobox" style="margin-top: 20px; display: none;">
+                        <label>AI STRATEGIC REPLY (Non-Obvious Take Inspired)</label>
+                        <p id="reply-text" style="font-size: 12px; color: #fff; line-height: 1.6;"></p>
+                    </div>
+
+                    <div id="community-output" class="monobox"
+                        style="margin-top: 20px; display: none; border-color: var(--accent-gold);">
+                        <label>VIRAL COMMUNITY PACKAGE (Polls & Teasers)</label>
+                        <pre id="community-text"
+                            style="font-size: 11px; color: #fff; white-space: pre-wrap; margin-top: 10px;"></pre>
                     </div>
                 </div>
-                <div class="terminal-container dashboard-card" style="margin-top: 30px; width: 100%;">
-                    <h2>Production Terminal</h2>
-                    <div class="terminal" id="terminal-feed">
-                        <div>[SYSTEM] Matters of Value Studio Online...</div>
+            </div>
+
+            <div id="tab-analytics" class="tab-content">
+                <div class="production-suite settings-grid">
+                    <div class="settings-col full-width">
+                        <h2>Studio Performance Metrics</h2>
+                        <div class="analytics-row">
+                            <div class="chart-box">
+                                <label>Daily Render Counts</label>
+                                <div class="bar-chart" id="velocity-chart"></div>
+                            </div>
+                            <div class="chart-box">
+                                <label>Content Distribution</label>
+                                <div class="pie-chart" id="niche-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-col full-width">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px;">
+                            <h2 style="margin: 0;">📅 Weekly Strategy Calendar</h2>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn-primary"
+                                    style="margin: 0; width: auto; padding: 10px 20px; background: var(--accent-cyan); color: #000;"
+                                    onclick="analytics.runBulkProduction()">Bulk Render Entire Week</button>
+                                <button class="btn-primary" style="margin: 0; width: auto; padding: 10px 20px;"
+                                    onclick="analytics.generateCalendar()">Generate AI Plan</button>
+                            </div>
+                        </div>
+                        <div class="calendar-container" id="calendar-view">
+                            <div class="loading">Fetching strategic plan...</div>
+                        </div>
+                    </div>
+
+                    <div class="settings-col full-width">
+                        <div class="monobox" style="margin-top: 20px;">
+                            <label>Production Ledger (Recent Exports)</label>
+                            <div id="production-ledger" style="font-size: 11px;"></div>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <div id="tab-settings" class="tab-content">
+                <div class="production-suite settings-grid">
+                    <div class="settings-col">
+                        <h2>⚙️ Infrastructure</h2>
+                        <div id="settings-infra" class="config-section"></div>
+                    </div>
+                    <div class="settings-col">
+                        <h2>🎨 Content Styles</h2>
+                        <div id="settings-styles" class="config-section"></div>
+                    </div>
+                    <div class="settings-col">
+                        <h2>🎙️ Voice Presets</h2>
+                        <div id="settings-voices" class="config-section"></div>
+                    </div>
+
+                    <button class="btn-primary full-width" onclick="settings.save()">Synchronize All
+                        Systems</button>
+                </div>
+            </div>
+            <div class="terminal-container dashboard-card" style="margin-top: 30px; width: 100%;">
+                <h2>Production Terminal</h2>
+                <div class="terminal" id="terminal-feed">
+                    <div>[SYSTEM] Matters of Value Studio Online...</div>
+                </div>
+            </div>
         </main>
     </div>
 

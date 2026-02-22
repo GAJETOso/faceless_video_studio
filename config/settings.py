@@ -5,13 +5,17 @@ class Config:
     # Keys that can be overridden via environment variables
     ENV_KEYS = [
         "OPENAI_API_KEY",
+        "GEMINI_API_KEY",
         "PEXELS_API_KEY",
         "REDDIT_CLIENT_ID",
         "REDDIT_CLIENT_SECRET",
         "REDDIT_USER_AGENT",
         "TELEGRAM_BOT_TOKEN",
         "TELEGRAM_CHAT_ID",
+        "YOUTUBE_CLIENT_ID",
         "YOUTUBE_CLIENT_SECRET",
+        "TIKTOK_ACCESS_TOKEN",
+        "GOOGLE_SERVICE_ACCOUNT_JSON",
         "OUTPUT_DIR",
         "ASSETS_DIR",
     ]
@@ -20,13 +24,17 @@ class Config:
         self.config_file = config_file
         self.defaults = {
             "OPENAI_API_KEY": "",
+            "GEMINI_API_KEY": "",
             "PEXELS_API_KEY": "",
             "REDDIT_CLIENT_ID": "your_reddit_client_id",
             "REDDIT_CLIENT_SECRET": "your_reddit_client_secret",
             "REDDIT_USER_AGENT": "FacelessVideoBot/1.0",
             "TELEGRAM_BOT_TOKEN": "",
             "TELEGRAM_CHAT_ID": "",
+            "YOUTUBE_CLIENT_ID": "",
             "YOUTUBE_CLIENT_SECRET": "",
+            "TIKTOK_ACCESS_TOKEN": "",
+            "GOOGLE_SERVICE_ACCOUNT_JSON": "",
             "ASSETS_DIR": "assets",
             "OUTPUT_DIR": "output",
             "STOCK_DIR": "assets/stock",

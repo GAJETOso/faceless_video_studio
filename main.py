@@ -36,7 +36,11 @@ class FacelessVideoBot:
                                    client_secret=self.config.REDDIT_CLIENT_SECRET,
                                    user_agent=self.config.REDDIT_USER_AGENT)
         
-        self.script_engine = ScriptWriter(api_key=self.config.OPENAI_API_KEY, config_styles=self.config.STYLES)
+        self.script_engine = ScriptWriter(
+            api_key=self.config.OPENAI_API_KEY, 
+            gemini_api_key=self.config.GEMINI_API_KEY,
+            config_styles=self.config.STYLES
+        )
         self.branding_engine = BrandingEngine(api_key=self.config.OPENAI_API_KEY)
         self.translation_engine = TranslationEngine(api_key=self.config.OPENAI_API_KEY)
         self.hook_engine = HookOptimizer(api_key=self.config.OPENAI_API_KEY)
@@ -53,12 +57,19 @@ class FacelessVideoBot:
         
         # Monetization, Distribution, & Personalization
         self.sponsor_engine = SponsorManager(api_key=self.config.OPENAI_API_KEY)
-        self.repurpose_engine = RepurposingEngine(api_key=self.config.OPENAI_API_KEY)
+        self.repurpose_engine = RepurposingEngine(
+            api_key=self.config.OPENAI_API_KEY,
+            gemini_api_key=self.config.GEMINI_API_KEY
+        )
         self.voice_cloning_engine = VoiceCloningEngine(api_key=self.config.OPENAI_API_KEY)
         self.publishing_pipeline = PublishingPipeline(config=self.config)
         
         self.voice_engine = VoiceGenerator(api_key=self.config.OPENAI_API_KEY, config_voices=self.config.VOICES)
-        self.music_engine = MusicSelector(assets_dir=self.config.ASSETS_DIR)
+        self.music_engine = MusicSelector(
+            assets_dir=self.config.ASSETS_DIR,
+            api_key=self.config.OPENAI_API_KEY,
+            gemini_api_key=self.config.GEMINI_API_KEY
+        )
         self.media_engine = MediaFetcher(
             pexels_api_key=self.config.PEXELS_API_KEY, 
             openai_api_key=self.config.OPENAI_API_KEY,
@@ -101,6 +112,11 @@ class FacelessVideoBot:
         elif action == "list":
             return self.voice_cloning_engine.list_cloned_voices()
         return {}
+    
+    def analyze_music_theme(self, script):
+        """Generates a professional music production brief from a script."""
+        print("[MUSIC] Analyzing script emotional arc for music selection...")
+        return self.music_engine.analyze_script_for_music(script)
 
     def get_strategic_pivot(self, current_stats):
         """Recommends a high-growth niche shift using AI analysis."""

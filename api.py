@@ -39,7 +39,11 @@ class ConceptRequest(BaseModel):
 
 @app.get("/")
 async def root():
-    return RedirectResponse(url="/dashboard")
+    return RedirectResponse(url="/dashboard/")
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return FileResponse(os.path.join("public", "favicon.svg"))
 
 @app.post("/api/script/from-concept")
 async def script_from_concept(request: ConceptRequest):
@@ -270,6 +274,13 @@ async def repurpose_content(request: dict):
     script = request.get("script")
     shorts = bot.analyze_for_repurposing(script)
     return {"shorts": shorts}
+
+@app.post("/api/intelligence/music")
+async def intelligence_music(request: dict):
+    "Generates a professional music production brief from a script."
+    script = request.get("script")
+    brief = bot.analyze_music_theme(script)
+    return {"music_brief": brief}
 
 @app.post("/api/personalization/clone-voice")
 async def clone_voice(request: dict):

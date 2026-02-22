@@ -503,15 +503,44 @@ const production = {
 
             const list = document.getElementById('shorts-list');
             list.innerHTML = data.shorts.map(s => `
-                <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #333;">
-                    <strong style="color: #aa00ff;">${s.title}</strong> <span style="font-size:10px; opacity:0.5;">(${s.segment})</span>
-                    <div style="opacity: 0.7;">${s.reason}</div>
+                <div style="margin-bottom: 12px; padding: 12px; border: 1px solid var(--accent-purple); border-radius: 8px; background: rgba(189, 0, 255, 0.05);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="color: #aa00ff; font-size: 14px;">${s.title}</strong>
+                        <span style="background: var(--accent-gold); color: #000; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 10px;">
+                            ${s.score ? `HOOK: ${s.score}/10` : 'VIRAL'}
+                        </span>
+                    </div>
+                    <div style="font-size: 11px; color: #fff; margin-bottom: 8px; line-height: 1.5; font-style: italic;">"${s.text}"</div>
+                    <div style="display: flex; gap: 10px; font-size: 10px; opacity: 0.8;">
+                        <span style="color: var(--accent-cyan);">⏱ ${s.estimated_duration}s</span>
+                        <span style="color: #00ff88;">Why viral: ${s.rationale || s.metadata?.niche}</span>
+                    </div>
+                    <button class="btn-niche" style="margin-top: 10px; width: 100%; font-size: 10px; border-color: #aa00ff;" onclick="logToTerminal('[SYSTEM] Clip extraction for \"${s.title}\" initiated...')">Extract & Render Short</button>
                 </div>
             `).join('');
 
             document.getElementById('shorts-output').style.display = 'block';
             showNotification("Viral Clips Identified");
         } catch (err) { logToTerminal(`[ERROR] Repurposing analysis failed.`); }
+    },
+
+    analyzeMusic: async () => {
+        const script = document.getElementById('custom-script').value;
+        if (!script) return alert("Please generate or enter a script first.");
+
+        logToTerminal(`[INTELLIGENCE] Designing optimal acoustic landscape...`);
+        try {
+            const res = await fetch('/api/intelligence/music', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ script })
+            });
+            const data = await res.json();
+
+            document.getElementById('music-brief-text').textContent = data.music_brief;
+            document.getElementById('music-output').style.display = 'block';
+            showNotification("Acoustic Strategy Generated");
+        } catch (err) { logToTerminal(`[ERROR] Music intelligence failed.`); }
     },
 
     openVoiceCloning: () => {
@@ -680,7 +709,17 @@ const settings = {
             // 1. Load Infrastructure (Flat Keys)
             const infraEl = document.getElementById('settings-infra');
             infraEl.innerHTML = '';
-            const flatKeys = ["OPENAI_API_KEY", "PEXELS_API_KEY", "CHAPTER_LENGTH_MINUTES", "OUTPUT_DIR"];
+            const flatKeys = [
+                "OPENAI_API_KEY",
+                "GEMINI_API_KEY",
+                "PEXELS_API_KEY",
+                "YOUTUBE_CLIENT_ID",
+                "YOUTUBE_CLIENT_SECRET",
+                "TIKTOK_ACCESS_TOKEN",
+                "GOOGLE_SERVICE_ACCOUNT_JSON",
+                "CHAPTER_LENGTH_MINUTES",
+                "OUTPUT_DIR"
+            ];
             flatKeys.forEach(k => {
                 infraEl.appendChild(settings.createInputBox(k, data[k]));
             });
@@ -734,8 +773,16 @@ const settings = {
         const newSettings = { STYLES: {}, VOICES: {} };
 
         // Collect Infra
-        ["OPENAI_API_KEY", "PEXELS_API_KEY", "CHAPTER_LENGTH_MINUTES", "OUTPUT_DIR"].forEach(k => {
-            newSettings[k] = document.getElementById(`setting-${k}`).value;
+        [
+            "OPENAI_API_KEY",
+            "GEMINI_API_KEY",
+            "PEXELS_API_KEY",
+            "YOUTUBE_CLIENT_ID", "YOUTUBE_CLIENT_SECRET",
+            "TIKTOK_ACCESS_TOKEN", "GOOGLE_SERVICE_ACCOUNT_JSON",
+            "CHAPTER_LENGTH_MINUTES", "OUTPUT_DIR"
+        ].forEach(k => {
+            const el = document.getElementById(`setting-${k}`);
+            if (el) newSettings[k] = el.value;
         });
 
         // Collect Styles
@@ -846,7 +893,19 @@ function logToTerminal(msg) {
     const terminal = document.getElementById('terminal-feed');
     const timestamp = new Date().toLocaleTimeString();
     const line = document.createElement('div');
-    line.textContent = `[${timestamp}] ${msg}`;
+
+    // Colorize tags
+    let formattedMsg = msg.replace(/^(\[.*?\])/, (match) => {
+        let color = "var(--accent-cyan)";
+        if (match.includes("ERROR")) color = "#ff4d4d";
+        if (match.includes("SUCCESS")) color = "#00ff88";
+        if (match.includes("STRATEGY")) color = "var(--accent-gold)";
+        if (match.includes("SYSTEM")) color = "#888";
+        if (match.includes("RENDERER") || match.includes("ENGINE")) color = "#bd00ff";
+        return `<span style="color: ${color}; font-weight: bold;">${match}</span>`;
+    });
+
+    line.innerHTML = `<span style="opacity: 0.4;">[${timestamp}]</span> ${formattedMsg}`;
     terminal.appendChild(line);
     terminal.scrollTop = terminal.scrollHeight;
 }
