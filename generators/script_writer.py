@@ -103,8 +103,14 @@ IMPORTANT: Write ONLY the final script text — no meta-commentary, no markdown 
             response.raise_for_status()
             return response.json()['choices'][0]['message']['content']
         except Exception as e:
-            print(f"Concept-to-script generation failed: {e}")
-            return f"Error generating script from concept for: {title}"
+            error_msg = f"Concept-to-script generation failed: {str(e)}"
+            if hasattr(e, 'response') and e.response is not None:
+                try:
+                    error_msg += f" - {e.response.json().get('error', {}).get('message', '')}"
+                except:
+                    error_msg += f" - {e.response.text}"
+            print(error_msg)
+            return f"Error: {error_msg}"
 
     def enhance_script(self, script):
         """Enhances a script with dramatic sound effect cues and visual emphasis."""

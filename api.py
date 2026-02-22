@@ -44,17 +44,53 @@ async def root():
 @app.post("/api/script/from-concept")
 async def script_from_concept(request: ConceptRequest):
     """Generates a full production script from a free-form creative brief/concept."""
-    script = bot.script_engine.generate_from_concept(
-        title=request.title,
-        concept=request.concept,
-        style=request.style,
-        duration_minutes=request.duration_minutes
-    )
-    return {"title": request.title, "script": script, "style": request.style}
+    # Re-read the key at call time so Railway ENV vars are always picked up,
+    # even if the bot was initialized before the env was fully applied.
+    live_key = os.environ.get("OPENAI_API_KEY") or bot.config.OPENAI_API_KEY
+
+    if not live_key:
+        raise HTTPException(
+            status_code=400,
+            detail="OPENAI_API_KEY is not configured. Add it in Railway → Variables or the Settings tab."
+        )
+
+    from generators.script_writer import ScriptWriter
+    writer = ScriptWriter(api_key=live_key, config_styles=bot.config.STYLES)
+
+    try:
+        script = writer.generate_from_concept(
+            title=request.title,
+            concept=request.concept,
+            style=request.style,
+            duration_minutes=request.duration_minutes
+        )
+        if script.startswith("Error"):
+            raise HTTPException(status_code=502, detail=script)
+        return {"title": request.title, "script": script, "style": request.style}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Script generation failed: {str(e)}")
 
 @app.get("/api/settings")
 async def get_settings():
     return bot.config.defaults # Returns all keys with current values
+
+@app.get("/api/debug/env")
+async def debug_env():
+    """Shows which keys are loaded (masked) — for Railway diagnostics."""
+    def mask(val):
+        if not val: return "NOT SET"
+        return val[:6] + "..." + val[-4:] if len(val) > 10 else "SET (short)"
+
+    return {
+        "OPENAI_API_KEY": mask(os.environ.get("OPENAI_API_KEY") or bot.config.OPENAI_API_KEY),
+        "PEXELS_API_KEY": mask(os.environ.get("PEXELS_API_KEY") or bot.config.PEXELS_API_KEY),
+        "TELEGRAM_BOT_TOKEN": mask(os.environ.get("TELEGRAM_BOT_TOKEN") or bot.config.TELEGRAM_BOT_TOKEN),
+        "config_OPENAI": mask(bot.config.OPENAI_API_KEY),
+        "env_OPENAI": mask(os.environ.get("OPENAI_API_KEY", "")),
+        "python_version": __import__("sys").version,
+    }
 
 @app.post("/api/settings")
 async def update_settings(settings: dict):

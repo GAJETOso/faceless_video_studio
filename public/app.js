@@ -276,6 +276,14 @@ const production = {
             });
             const data = await res.json();
 
+            if (!res.ok) {
+                const errMsg = data.detail || 'Generation failed';
+                logToTerminal(`[ERROR] ${errMsg}`);
+                document.getElementById('concept-script-output').value = `Error: ${errMsg}`;
+                document.getElementById('concept-result-panel').style.display = 'block';
+                return showNotification(errMsg);
+            }
+
             document.getElementById('concept-script-output').value = data.script;
             document.getElementById('concept-result-panel').style.display = 'block';
             document.getElementById('concept-script-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -283,7 +291,7 @@ const production = {
             showNotification('Script generated successfully!');
         } catch (err) {
             logToTerminal(`[ERROR] Concept generation failed: ${err.message}`);
-            showNotification('Script generation failed. Check logs.');
+            showNotification(`Connection error: ${err.message}`);
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<span class="btn-icon">&#x2728;</span> Generate Script from Concept';
