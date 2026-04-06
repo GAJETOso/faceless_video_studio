@@ -13,7 +13,7 @@ bot = FacelessVideoBot()
 # Serve static files for the dashboard
 app.mount("/dashboard", StaticFiles(directory="public", html=True), name="static")
 # Serve video outputs for the Cinema Feed
-app.mount("/exports", StaticFiles(directory="output"), name="exports")
+app.mount("/exports", StaticFiles(directory=bot.config.OUTPUT_DIR), name="exports")
 
 class VideoRequest(BaseModel):
     niche: str

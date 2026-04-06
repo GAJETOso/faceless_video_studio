@@ -92,15 +92,23 @@ const dashboard = {
 
     renderNews: (news) => {
         const list = document.getElementById('news-list');
-        list.innerHTML = news.map(item => `
-            <div class="news-item" onclick="dashboard.useNewsItem('${item.title}')">
-                <div>
-                    <div class="news-title">${item.title}</div>
-                    <div class="news-niche">${item.niche}</div>
+        list.innerHTML = news.map(item => {
+            const isYouTube = item.metadata && item.metadata.source === 'YouTube';
+            const metaHtml = isYouTube
+                ? `<div style="color: var(--accent-gold); font-size: 10px; margin-top: 4px;">📺 YouTube: ${item.metadata.channel}</div>`
+                : '';
+
+            return `
+                <div class="news-item" onclick="dashboard.useNewsItem('${item.title}')">
+                    <div style="flex: 1;">
+                        <div class="news-title">${item.title}</div>
+                        <div class="news-niche">${item.niche}</div>
+                        ${metaHtml}
+                    </div>
+                    <div class="urgency-badge ${item.urgency.toLowerCase()}">${item.urgency}</div>
                 </div>
-                <div class="urgency-badge ${item.urgency.toLowerCase()}">${item.urgency}</div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     },
 
     useNewsItem: (title) => {

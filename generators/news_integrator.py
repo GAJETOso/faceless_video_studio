@@ -2,31 +2,29 @@
 import os
 import requests
 import random
+from sources.youtube_trends import YouTubeTrends
 
 class NewsIntegrator:
     def __init__(self, api_key=None):
         self.api_key = api_key
         # High-stakes news categories
-        self.categories = ["finance", "technology", "geopolitics", "mystery"]
+        self.categories = ["finance", "technology", "geopolitics", "mystery", "motivational"]
+        self.yt_engine = YouTubeTrends(api_key=api_key)
 
     def fetch_trending_topics(self):
-        """Simulates fetching real-time breaking news opportunities for documentaries."""
-        if not self.api_key:
-            # High-stakes fallback topics
-            return [
-                {"title": "The Silicon Shield: Taiwan's Semiconductor Monopoly", "niche": "Technology", "urgency": "High"},
-                {"title": "The Petrodollar Pivot: A New World Order?", "niche": "Geopolitics", "urgency": "Breaking"},
-                {"title": "Quantum Supremacy: The End of Encryption", "niche": "Mystery", "urgency": "Trending"},
-                {"title": "The Lithium Rush: Mining the Andes", "niche": "Finance", "urgency": "Global"}
-            ]
-
-        # In a real scenario, use NewsAPI or GNews here
-        try:
-            # Mocking AI-curated news from world pulse
-            return [
-                {"title": "Hyper-Inflation in the Digital Age", "niche": "Finance", "urgency": "High"},
-                {"title": "The Lost Cities of the Amazon: LiDAR Reveals All", "niche": "Mystery", "urgency": "New Discovery"},
-                {"title": "AI Warfare: The Rise of the Autonomous Soldier", "niche": "Technology", "urgency": "Sovereign Threat"}
-            ]
-        except Exception:
-            return []
+        """Fetches breaking news opportunities, merging AI mocks and real YouTube research."""
+        base_topics = [
+            {"title": "The Silicon Shield: Taiwan's Semiconductor Monopoly", "niche": "Technology", "urgency": "High"},
+            {"title": "The Petrodollar Pivot: A New World Order?", "niche": "Geopolitics", "urgency": "Breaking"},
+            {"title": "Quantum Supremacy: The End of Encryption", "niche": "Mystery", "urgency": "Trending"},
+            {"title": "The Lithium Rush: Mining the Andes", "niche": "Finance", "urgency": "Global"}
+        ]
+        
+        # Inject real YouTube motivational research
+        yt_topics = self.yt_engine.fetch_trending_motivation()
+        
+        # Merge and shuffle
+        combined = base_topics + yt_topics
+        random.shuffle(combined)
+        
+        return combined[:6] # Return top 6 high-stakes opportunities

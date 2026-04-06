@@ -36,7 +36,7 @@ class Config:
             "TIKTOK_ACCESS_TOKEN": "",
             "GOOGLE_SERVICE_ACCOUNT_JSON": "",
             "ASSETS_DIR": "assets",
-            "OUTPUT_DIR": "output",
+            "OUTPUT_DIR": "/tmp/output" if os.environ.get("VERCEL") else "output",
             "STOCK_DIR": "assets/stock",
             "DOC_TITLE_TEMPLATE": "VALUES THAT MATTERS: {title}",
             "CHAPTER_LENGTH_MINUTES": 5,
